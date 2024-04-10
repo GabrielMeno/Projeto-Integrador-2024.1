@@ -1,4 +1,4 @@
-# Projeto Integrador - Sistema de Gerenciamento de Agendamento para Salão de Beleza
+# Projeto Integrador - Sistema de..
 
 Este repositório contém o código-fonte e a documentação do projeto integrador desenvolvido como parte das disciplinas de Banco de Dados, Engenharia de Software e Programação 2. O objetivo deste trabalho é criar um Sistema 
 
