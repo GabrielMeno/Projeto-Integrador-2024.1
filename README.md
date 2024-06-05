@@ -27,7 +27,7 @@ A documentação completa deste projeto, incluindo a especificação dos requisi
 
 ## Equipe
 
-Este projeto foi desenvolvido pelos alunos Gabriel Henrique Menoncin, Jeferson Solforoso Pompermaier e Marco Aurélio Lunardi como parte do trabalho do curso de Ciência da Computação da Universidade Federal da Fronteira Sul.
+Este projeto foi desenvolvido pelos alunos Gabriel Henrique Menoncin(matrícula 2121101065), Jeferson Solforoso Pompermaier(matrícula 2221101042) e Marco Aurélio Lunardi(matrícula 2221101054) como parte do trabalho do curso de Ciência da Computação da Universidade Federal da Fronteira Sul.
 
 ## Contato
 
