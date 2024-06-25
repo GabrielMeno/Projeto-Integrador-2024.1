@@ -22,7 +22,7 @@ const Button = ({
   className = "",
   leftIcon,
   rightIcon,
-  shape,
+  shape = "round",
   variant = "fill",
   size = "sm",
   color = "indigo_700_01",

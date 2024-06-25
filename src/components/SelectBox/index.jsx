@@ -8,7 +8,7 @@ const shapes = {
 
 const variants = {
   outline: {
-    indigo_700: "border-indigo-700 border-[3px] border-solid",
+    indigo_700: "border-indigo-700 border-3 border-solid",
   },
 };
 
@@ -39,8 +39,8 @@ const SelectBox = React.forwardRef(
           ref={ref}
           options={options}
           className={`${className} flex ${(shape && shapes[shape]) || ""} ${
-            (size && sizes[size]) || ""
-          } ${(variant && variants[variant]?.[color]) || ""}`}
+            sizes[size] || ""
+          } ${(variants[variant]?.[color]) || ""}`}
           isSearchable={isSearchable}
           isMulti={isMulti}
           components={{
@@ -69,7 +69,7 @@ const SelectBox = React.forwardRef(
             }),
             option: (provided, state) => ({
               ...provided,
-              color: "#000",
+              color: state.isSelected ? "#fff" : "#000",
             }),
             valueContainer: (provided) => ({
               ...provided,
@@ -77,7 +77,7 @@ const SelectBox = React.forwardRef(
             }),
             placeholder: (provided) => ({
               ...provided,
-              margin: 0, // Corrigido para incluir o spread corretamente
+              margin: 0,
             }),
             menuPortal: (base) => ({ ...base, zIndex: 999999 }),
             menu: ({ width, ...css }) => ({ ...css }),
@@ -100,7 +100,7 @@ SelectBox.propTypes = {
   isSearchable: PropTypes.bool,
   isMulti: PropTypes.bool,
   onChange: PropTypes.func,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   indicator: PropTypes.node,
   shape: PropTypes.oneOf(["round"]),
   size: PropTypes.oneOf(["xs"]),
