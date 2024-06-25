@@ -9,7 +9,7 @@ const sizes = {
     headings: "text-[32px] font-semibold md:text-3xl sm:text-[28px]",
 };
 
-const Heading = ({ children, className = "", size = "textxs", as: Component = "h6", ...restProps }) => {
+const Heading = ({ children, className = "", size = "texts", as: Component = "h1", ...restProps }) => {
     return (
         <Component className={`text-indigo-700 font-poppins ${sizes[size]} ${className}`} {...restProps}>
             {children}

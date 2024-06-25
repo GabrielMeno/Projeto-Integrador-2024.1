@@ -11,25 +11,25 @@ import EditarUsuario from "./pages/EditarUsuario";
 
 const ProjectRoutes = () => {
     let element = useRoutes([
-        { path: "/", element: <Home />},   
-        { path: "*", element: <NotFound />},  
+        { path: "/", element: <Home /> },
+        { path: "*", element: <NotFound /> },
         {
             path: "PainelPrincipal",
             element: <PainelPrincipal />,
         },
         {
             path: "ordens",
-            element : <Ordens />,
+            element: <Ordens />,
         },
         {
             path: "cadastro",
-            element: <Cadastro/>,
+            element: <Cadastro />,
         },
         {
             path: "editarordem",
-            element: <EditarOrdem/>,
+            element: <EditarOrdem />,
         },
-        {  // <-- vírgula adicionada aqui
+        {
             path: "painelusuarios",
             element: <PainelUsuarios />,
         },
@@ -38,6 +38,7 @@ const ProjectRoutes = () => {
             element: <EditarUsuario />,
         },
     ]);
+
     return element;
 };
 

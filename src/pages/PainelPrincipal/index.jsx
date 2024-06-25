@@ -23,7 +23,7 @@ export default function PainelPrincipalPage() {
                             <Text as="p" className="text-white">Top Duo Informática</Text>
                             <div className="flex flex-1 items-center justify-end gap-2 sm:self-stretch">
                                 <Img src="images/img_image_5.png" alt="imagefive" className="h-9 object-cover" />
-                                <Heading size="text-base" as="h1" className="text-white">
+                                <Heading size="text-base" as="h1" className="Text-white">
                                     Sair
                                 </Heading>
                             </div>
