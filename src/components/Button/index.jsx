@@ -30,12 +30,12 @@ const Button = ({
 }) => {
   return (
     <button
-      className={`flex items-center justify-center text-center cursor-pointer text-white-a700 text-base ${shapes[shape] || ""} ${sizes[size] || ""} ${variants[variant]?.[color] || ""} ${className}`}
+      className={`flex flex-row items-center justify-center text-center cursor-pointer text-white-a700 text-base ${shape && shapes[shape] || ""} ${size && sizes[size] || ""} ${variant && variants[variant]?.[color] || ""} ${className}`}
       {...restProps}
     >
-      {leftIcon && leftIcon}
+      {!!leftIcon && leftIcon}
       {children}
-      {rightIcon && rightIcon}
+      {!!rightIcon && rightIcon}
     </button>
   );
 };

@@ -38,22 +38,12 @@ const Input = React.forwardRef(
   ) => {
     return (
       <label
-        className={`flex items-center justify-center cursor-text ${className} ${shapes[shape] || ""} ${
-          variants[variant]?.[color] || ""
-        } ${sizes[size] || ""}`}
+        className={`${className} flex items-center justify-center cursor-text border-indigo-700 border-2 border-solid rouded-[16px] ${(shape && shapes[shape])|| ""} ${ variants[variant]?.[color] || variant[variant] || ""} ${sizes[size] || ""}`}
       >
-        {label && <span>{label}</span>}
-        {prefix && <span>{prefix}</span>}
-        <input
-          ref={ref}
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          onChange={onChange}
-          className="flex-1 bg-transparent outline-none"
-          {...restProps}
-        />
-        {suffix && <span>{suffix}</span>}
+        {!!label && label}
+        {!!prefix && prefix}
+        <input ref={ref} type={type} name={name} placeholder={placeholder} onChange={onChange} {...restProps} />
+        {!!suffix && suffix}
       </label>
     );
   }

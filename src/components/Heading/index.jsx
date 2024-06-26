@@ -9,9 +9,11 @@ const sizes = {
     headings: "text-[32px] font-semibold md:text-3xl sm:text-[28px]",
 };
 
-const Heading = ({ children, className = "", size = "texts", as: Component = "h1", ...restProps }) => {
+const Heading = ({ children, className = "", size = "texts", as, ...restProps }) => {
+    const Component = as || "h6";
+
     return (
-        <Component className={`text-indigo-700 font-poppins ${sizes[size]} ${className}`} {...restProps}>
+        <Component className={`text-indigo-700 font-poppins ${className} ${sizes[size]} `} {...restProps}>
             {children}
         </Component>
     );

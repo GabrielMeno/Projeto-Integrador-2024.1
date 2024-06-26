@@ -1,11 +1,10 @@
+import React from "react";
 import { Helmet } from "react-helmet";
 import { Button, Input, Heading } from "../../components";
 import Header from "../../components/Header";
-import React from "react";
 import { Link } from "react-router-dom";
 
-
-export default function EditarUsuarioPage() {
+export default function CadastrarUsuarioPage() {
     return (
         <>
             <Helmet>
@@ -19,7 +18,7 @@ export default function EditarUsuarioPage() {
                         <div className="flex w-[90%] justify-end md:w-full">
                             <div className="flex w-full flex-col items-center gap-[38px]">
                                 <Heading size="textlg" as="h1" className="uppercase">
-                                    Editar Usuário
+                                    Cadastrar Usuário
                                 </Heading>
                                 <div className="flex items-center self-stretch md:flex-col">
                                     <div className="flex w-full flex-col items-start gap-[30px]">
@@ -67,12 +66,7 @@ export default function EditarUsuarioPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="mr-[102px] flex w-[76%] justify-between gap-5 md:mr-0 md:w-full sm:flex-col">
-                            <a href="https://www.youtube.com/embed/bv8Fxk@sz7I" target="_blank">
-                                <Button shape="round" className="min-w-[156px] font-semibold sm:px-5">
-                                    Excluir
-                                </Button>
-                            </a>
+                        <div className="mr-[102px] flex w-[65%] justify-between gap-5 md:mr-0 md:w-full sm:flex-col">
                             <Link to="/painelusuarios">
                                 <Button shape="round" className="min-w-[156px] font-semibold sm:px-5">
                                     Cancelar

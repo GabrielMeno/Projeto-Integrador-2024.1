@@ -1,7 +1,7 @@
 import React from "react";
 
 const sizes = {
-  textxl: "text-3xl font-normal not-italic md:text-28px sm:text-26px",
+  textxl: "text-3xl font-normal not-italic md:text-[28px] sm:text-[26px]",
 };
 
 const Text = ({ children, className = "", as, size = "textxl", ...restProps }) => {

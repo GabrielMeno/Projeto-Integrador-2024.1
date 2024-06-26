@@ -8,7 +8,7 @@ const shapes = {
 
 const variants = {
   outline: {
-    indigo_700: "border-indigo-700 border-3 border-solid",
+    indigo_700: "border-indigo-700 border-[3px] border-solid",
   },
 };
 
@@ -38,9 +38,7 @@ const SelectBox = React.forwardRef(
         <Select
           ref={ref}
           options={options}
-          className={`${className} flex ${(shape && shapes[shape]) || ""} ${
-            sizes[size] || ""
-          } ${(variants[variant]?.[color]) || ""}`}
+          className={`${className} flex ${(shape && shapes[shape]) || ""} ${(size && sizes[size]) || ""} ${(variants[variant]?.[color]) || ""}`}
           isSearchable={isSearchable}
           isMulti={isMulti}
           components={{
@@ -69,7 +67,7 @@ const SelectBox = React.forwardRef(
             }),
             option: (provided, state) => ({
               ...provided,
-              color: state.isSelected ? "#fff" : "#000",
+              color: "#000",
             }),
             valueContainer: (provided) => ({
               ...provided,
@@ -100,7 +98,7 @@ SelectBox.propTypes = {
   isSearchable: PropTypes.bool,
   isMulti: PropTypes.bool,
   onChange: PropTypes.func,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  value: PropTypes.string,
   indicator: PropTypes.node,
   shape: PropTypes.oneOf(["round"]),
   size: PropTypes.oneOf(["xs"]),

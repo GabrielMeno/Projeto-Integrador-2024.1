@@ -1,41 +1,46 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
-import Home from "./pages/Home";
-import NotFound from "./pages/NotFound";
-import PainelPrincipal from "./pages/PainelPrincipal";
-import Ordens from "./pages/Ordens";
-import Cadastro from "./pages/Cadastro";
-import EditarOrdem from "./pages/EditarOrdem";
-import PainelUsuarios from "./pages/PainelUsuarios";
-import EditarUsuario from "./pages/EditarUsuario";
+import Home from "pages/Home";
+import NotFound from "pages/NotFound";
+import PainelPrincipal from "pages/PainelPrincipal";
+import Ordens from "pages/Ordens";
+import Cadastro from "pages/Cadastro";
+import EditarOrdem from "pages/EditarOrdem";
+import PainelUsuarios from "pages/PainelUsuarios";
+import EditarUsuario from "pages/EditarUsuario";
+import CadastrarUsuario from "pages/CadastrarUsuario";
 
 const ProjectRoutes = () => {
     let element = useRoutes([
         { path: "/", element: <Home /> },
         { path: "*", element: <NotFound /> },
         {
-            path: "PainelPrincipal",
+            path: "/painelprincipal",
             element: <PainelPrincipal />,
         },
         {
-            path: "ordens",
+            path: "/ordens",
             element: <Ordens />,
         },
         {
-            path: "cadastro",
+            path: "/cadastro",
             element: <Cadastro />,
         },
         {
-            path: "editarordem",
+            path: "/editarordem",
             element: <EditarOrdem />,
         },
         {
-            path: "painelusuarios",
+            path: "/painelusuarios",
             element: <PainelUsuarios />,
         },
         {
-            path: "editarusuario",
+            path: "/editarusuario",
             element: <EditarUsuario />,
+        },
+        {
+            path: "/cadastrarusuario",
+            element: <CadastrarUsuario />,
         },
     ]);
 

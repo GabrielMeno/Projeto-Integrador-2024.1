@@ -1,9 +1,12 @@
 import React from "react";
-import { Heading, Img, Text, Button } from "../../components";
+import { Heading, Img, Text, Button } from "./..";
+import { Link } from "react-router-dom";
+
 
 export default function Header({ ...props }) {
     return (
         <header {...props} className={`${props.className} flex md:flex-col justify-between items-center gap-5`}>
+          <Link to="/painelprincipal">
             <Button
                 color="red_A700"
                 size="xs"
@@ -11,15 +14,16 @@ export default function Header({ ...props }) {
             >
                 Voltar
             </Button>
+            </Link>
             <div className="mx-auto flex w-full max-w-[1016px] items-center justify-between rounded-[16px] bg-indigo-800 px-[30px] py-2.5 shadow-xs">
-                <Text as="p" className="self-end sm:self-auto text-white">
+                <Text as="p" className="self-end sm:self-auto">
                     Painel ordens de serviço
                 </Text>
                 <div className="flex items-center gap-1.5">
                     <a href="#">
                         <Img src="images/img_image_5.png" alt="imagefive" className="h-[36px] object-cover" />
                     </a>
-                    <Heading size="texts" as="p" className="text-white">
+                    <Heading size="texts" as="p" className="text-white-a700">
                         Sair
                     </Heading>
                 </div>

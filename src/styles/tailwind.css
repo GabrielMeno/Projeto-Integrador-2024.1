@@ -29,18 +29,14 @@ select {
 }
 
 [type="text"]:focus,
-input:where(:not([type])),
 [type="email"]:focus,
 [type="url"]:focus,
 [type="password"]:focus,
 [type="number"]:focus,
 [type="date"]:focus,
-[type="datetime-local"]:focus,
-[type="month"]:focus,
 [type="search"]:focus,
-[type="tel"]:focus,
-[type="time"]:focus,
-[type="week"]:focus,
+[type="checkbox"]:focus,
+[type="radio"]:focus,
 [multiple]:focus,
 textarea:focus,
 select:focus {
@@ -50,6 +46,6 @@ select:focus {
 
 @layer components {
   .container-xs {
-    @apply w-full max-w-[1294px] mx-auto;
+    @apply w-full mx-auto max-w-[1294px];
   }
 }
