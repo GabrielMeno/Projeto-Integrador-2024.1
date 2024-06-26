@@ -8,6 +8,7 @@ import Cadastro from "./pages/Cadastro";
 import EditarOrdem from "./pages/EditarOrdem";
 import PainelUsuarios from "./pages/PainelUsuarios";
 import EditarUsuario from "./pages/EditarUsuario";
+import LoginPage from "./pages/Login/LoginPage";
 
 const ProjectRoutes = () => {
     let element = useRoutes([
@@ -16,6 +17,10 @@ const ProjectRoutes = () => {
         {
             path: "PainelPrincipal",
             element: <PainelPrincipal />,
+        },
+        {
+            path: "LoginPage",
+            element: <LoginPage />,
         },
         {
             path: "ordens",
