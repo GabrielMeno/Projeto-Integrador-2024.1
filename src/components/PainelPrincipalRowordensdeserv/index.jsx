@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export default function PainelPrincipalRowOrdensDeServ({
   image = "images/img_image_2.png",
   text = "Ordens de serviço",
-  link = "/", // Adicione uma prop 'link' para especificar a página de destino
+  link = "/",
   ...props
 }) {
   return (

@@ -23,12 +23,12 @@ export default function CadastroPage() {
                             <Button
                                 color="red_A700"
                                 size="xs"
-                                className="relative h-[64px] w-[10%] self-end rounded-[5px] bg-indigo-700 md:h-auto md:w-full md:self-auto flex items-center justify-center text-white font-bold sm:px-5"
+                                className="min-w-[142px] self-end rounded-[5px] font-inter font-bold md:self-auto"
                             >
                                 Voltar
                             </Button>
                         </Link>
-                        <div className="flex w-[78%] items-end justify-between gap-5 rounded-[16px] bg-indigo-800 px-6 py-2 shadow-xs md:w-full sm:flex-col sm:px-5">
+                        <div className="flex w-[80%] justify-between gap-5 rounded-[16px] bg-indigo-800 px-6 py-2 shadow-xs md:w-full ">
                             <Text as="p" className="ml-2.5 mt-1 md:ml-0">
                                 Cadastrar ordem de serviço
                             </Text>

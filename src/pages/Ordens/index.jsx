@@ -23,7 +23,7 @@ export default function OrdensPage() {
                     <Header className="self-stretch" />
                     <div className="flex w- [28%] flex-col items-center md: w-full">
                         <Link to="/cadastro">
-                            <Button shape="round" className="mt-[82px] min-w-[156px] font-semibold sm: px-5">
+                            <Button shape="round" className="min-w-[156px] font-semibold sm: px-5">
                                 Nova OS
                             </Button>
                         </Link>

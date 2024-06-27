@@ -1,6 +1,5 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
-<<<<<<< HEAD
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import PainelPrincipal from "pages/PainelPrincipal";
@@ -10,17 +9,7 @@ import EditarOrdem from "pages/EditarOrdem";
 import PainelUsuarios from "pages/PainelUsuarios";
 import EditarUsuario from "pages/EditarUsuario";
 import CadastrarUsuario from "pages/CadastrarUsuario";
-=======
-import Home from "./pages/Home";
-import NotFound from "./pages/NotFound";
-import PainelPrincipal from "./pages/PainelPrincipal";
-import Ordens from "./pages/Ordens";
-import Cadastro from "./pages/Cadastro";
-import EditarOrdem from "./pages/EditarOrdem";
-import PainelUsuarios from "./pages/PainelUsuarios";
-import EditarUsuario from "./pages/EditarUsuario";
-import LoginPage from "./pages/Login/LoginPage";
->>>>>>> c92ee522c1951215bd792050d15584995e21390b
+import LoginPage from "pages/Login/LoginPage";
 
 const ProjectRoutes = () => {
     let element = useRoutes([
@@ -31,15 +20,11 @@ const ProjectRoutes = () => {
             element: <PainelPrincipal />,
         },
         {
-<<<<<<< HEAD
-            path: "/ordens",
-=======
-            path: "LoginPage",
+            path: "/login",
             element: <LoginPage />,
         },
         {
-            path: "ordens",
->>>>>>> c92ee522c1951215bd792050d15584995e21390b
+            path: "/ordens",
             element: <Ordens />,
         },
         {
