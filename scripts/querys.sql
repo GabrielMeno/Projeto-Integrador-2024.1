@@ -12,7 +12,7 @@ CREATE TABLE Cliente (
 CREATE TABLE Usuario (
     cpf VARCHAR(11) PRIMARY KEY,
     rg VARCHAR(15),
-    senha VARCHAR(50),
+    senha VARCHAR(255),
     user_token varchar,
     nome VARCHAR(100),
     nome_de_usuario VARCHAR(50),
@@ -35,3 +35,11 @@ CREATE TABLE Ordem_de_Servico (
     FOREIGN KEY (cliente_id) REFERENCES Cliente(ID),
     FOREIGN KEY (usuario_cpf) REFERENCES Usuario(cpf)
 );
+
+insert into usuario (cpf, rg, senha, nome, nome_de_usuario, logradouro, numero, complemento, tipo) 
+values('11050140966', '5879808', '1234', 'marco', 'marcola', 'rua independencia', '1365', 'casa', 1);
+
+
+UPDATE Usuario
+SET senha = '$2b$10$sYK9L3XrW1TNQrrpJX1WZuKk255cb6MQooLdhsX7RxXeVegBad5z2'
+WHERE nome_de_usuario = 'marcola';

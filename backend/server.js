@@ -36,32 +36,31 @@ passport.use(
         },
         async (username, password, done) => {
             try {
-                // Busca o usuário no banco de dados
+                console.log("Tentando autenticar usuário:", username);
                 const user = await db.oneOrNone(
                     "SELECT * FROM Usuario WHERE nome_de_usuario = $1;",
                     [username]
                 );
 
-                // Se não encontrou, retorna erro
                 if (!user) {
+                    console.log("Usuário não encontrado:", username);
                     return done(null, false, { message: "Usuário incorreto." });
                 }
 
-                // Verifica se o hash da senha bate com a senha informada
                 const passwordMatch = await bcrypt.compare(
                     password,
                     user.senha
                 );
 
-                // Se senha está ok, retorna o objeto usuário
                 if (passwordMatch) {
                     console.log("Usuário autenticado!");
                     return done(null, user);
                 } else {
-                    // Senão, retorna um erro
+                    console.log("Senha incorreta para usuário:", username);
                     return done(null, false, { message: "Senha incorreta." });
                 }
             } catch (error) {
+                console.log("Erro ao tentar autenticar usuário:", error);
                 return done(error);
             }
         }
@@ -116,12 +115,13 @@ app.post(
     "/login",
     passport.authenticate("local", { session: false }),
     (req, res) => {
-        // Cria o token JWT
         const token = jwt.sign(
-            { cpf: req.user.cpf },
-            "your-secret-key",
-            { expiresIn: "1h" }
+            { cpf: req.user.cpf }, // payload
+            "your-secret-key", // chave secreta
+            { expiresIn: "1h" } // opções
         );
+
+        console.log("Token gerado:", token); // Adicione esta linha para verificar o token gerado
 
         res.json({ message: "Login successful", token: token });
     }

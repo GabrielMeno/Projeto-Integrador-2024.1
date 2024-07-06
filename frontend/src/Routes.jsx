@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, useNavigate } from 'react-router-dom';
 import Home from 'pages/Home';
 import NotFound from 'pages/NotFound';
 import PainelPrincipal from 'pages/PainelPrincipal';
@@ -12,11 +12,18 @@ import CadastrarUsuario from 'pages/CadastrarUsuario';
 import Login from 'pages/Login';
 
 const ProjectRoutes = () => {
+  let navigate = useNavigate();
+
+  const handleLoginSuccess = () => {
+    console.log("Usuário logado com sucesso!");
+    navigate('/painelprincipal'); // Redireciona para a página principal após o login
+  };
+
   let element = useRoutes([
-    { path: '/', element: <Login /> },
+    { path: '/', element: <Login onLogin={handleLoginSuccess} /> },
     { path: '*', element: <NotFound /> },
     { path: '/painelprincipal', element: <PainelPrincipal /> },
-    { path: '/login', element: <Login /> },
+    { path: '/login', element: <Login onLogin={handleLoginSuccess} /> },
     { path: '/ordens', element: <Ordens /> },
     { path: '/cadastro', element: <Cadastro /> },
     { path: '/editarordem', element: <EditarOrdem /> },
