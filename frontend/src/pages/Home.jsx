@@ -13,7 +13,7 @@ const Home = () => {
                     </Link>
                 </li>
                 <li style={{ marginBottom: "10px" }}>
-                    <Link to="/LoginPage" style={{ color: "#87CEFA", textDecoration: "none" }}>
+                    <Link to="/Login" style={{ color: "#87CEFA", textDecoration: "none" }}>
                         LoginPage
                     </Link>
                 </li>
