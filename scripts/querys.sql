@@ -13,10 +13,11 @@ CREATE TABLE Usuario (
     cpf VARCHAR(11) PRIMARY KEY,
     rg VARCHAR(15),
     senha VARCHAR(255),
-    user_token varchar,
+    user_token VARCHAR(255),
     nome VARCHAR(100),
     nome_de_usuario VARCHAR(50),
     cargo VARCHAR(100),
+    permissoes TEXT,
     tipo INT
 );
 
@@ -33,6 +34,7 @@ CREATE TABLE Ordem_de_Servico (
     FOREIGN KEY (cliente_id) REFERENCES Cliente(ID),
     FOREIGN KEY (usuario_cpf) REFERENCES Usuario(cpf)
 );
+
 
 insert into usuario (cpf, rg, senha, nome, nome_de_usuario, logradouro, numero, complemento, tipo) 
 values('11050140966', '5879808', '1234', 'marco', 'marcola', 'rua independencia', '1365', 'casa', 1);
