@@ -13,6 +13,7 @@ CREATE TABLE Usuario (
     cpf VARCHAR(11) PRIMARY KEY,
     rg VARCHAR(15),
     senha VARCHAR(50),
+    user_token varchar,
     nome VARCHAR(100),
     nome_de_usuario VARCHAR(50),
     logradouro VARCHAR(100),
