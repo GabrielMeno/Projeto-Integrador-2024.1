@@ -4,11 +4,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const dropDownOptions = [
-    { label: "Option1", value: "option1" },
-    { label: "Option2", value: "option2" },
-    { label: "Option3", value: "option3" },
+    { label: "Em aberto", value: "status1" },
+    { label: "Em execução", value: "status2" },
+    { label: "Aguardando aprovação", value: "status3" },
+    { label: "Aguardando peça", value: "status4" },
+    { label: "Em processo", value: "status5" },
+    { label: "Recusada", value: "status6" },
+    { label: "Finalizada", value: "status7" },
+    { label: "Em garantia", value: "status8" },
 ];
 
+/*
+O Sistema deve permitir gerar um relatório filtrado por data e/ou status 
+mostrando as ordens de serviço, dividindo-as em: em aberto, em execução,
+ aguardando aprovação, aguardando peça, em processo, recusada, finalizada
+  e em garantia.
+*/
 export default function EditarOrdemPage() {
     return (
         <>

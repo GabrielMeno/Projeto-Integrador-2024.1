@@ -6,10 +6,16 @@ import { Link } from "react-router-dom";
 
 
 const dropDownOptions = [
-    { label: "Option1", value: "option1" },
-    { label: "Option2", value: "option2" },
-    { label: "Option3", value: "option3" },
+    { label: "Em aberto", value: "status1" },
+    { label: "Em execução", value: "status2" },
+    { label: "Aguardando aprovação", value: "status3" },
+    { label: "Aguardando peça", value: "status4" },
+    { label: "Em processo", value: "status5" },
+    { label: "Recusada", value: "status6" },
+    { label: "Finalizada", value: "status7" },
+    { label: "Em garantia", value: "status8" },
 ];
+
 
 export default function OrdensPage() {
     return (
