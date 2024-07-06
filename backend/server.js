@@ -4,7 +4,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");  // Use bcryptjs instead
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const pgp = require("pg-promise")({});
 
@@ -252,6 +252,8 @@ app.put("/usuario", requireJWTAuth, async (req, res) => {
     const { cpf } = req.query;
     const { nome, nome_de_usuario, cargo, rg, senha, permissoes } = req.body;
 
+    console.log("Dados recebidos para atualizar usuário:", req.body);
+
     try {
         const fields = [
             { field: 'nome', value: nome },
@@ -276,6 +278,9 @@ app.put("/usuario", requireJWTAuth, async (req, res) => {
             .map(({ value }) => value);
 
         values.push(cpf);
+
+        console.log("Consulta de atualização:", `UPDATE Usuario SET ${setClause} WHERE cpf = $${values.length}`);
+        console.log("Valores de atualização:", values);
 
         await db.none(
             `UPDATE Usuario SET ${setClause} WHERE cpf = $${values.length}`,
