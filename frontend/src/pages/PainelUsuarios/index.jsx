@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
 import { Button, Input, Heading } from "../../components";
 import Header from "../../components/Header";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PainelUsuariosPage() {
+    const [formData, setFormData] = useState({
+        nome_de_usuario: '',
+        cpf: '',
+        cargo: ''
+    });
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const handleSubmit = () => {
+        const queryString = new URLSearchParams(formData).toString();
+        navigate(`/consultar-usuario?${queryString}`);
+    };
+
     return (
         <>
             <Helmet>
@@ -26,24 +43,22 @@ export default function PainelUsuariosPage() {
                         <div className="mt-[30px] flex flex-col gap-7 self-stretch">
                             <div className="flex flex-col items-center gap-1">
                                 <Heading as="h2">Nome do Usuário</Heading>
-                                <Input shape="round" name="edittext" className="self-stretch sm:pr-5" />
+                                <Input shape="round" name="nome_de_usuario" className="self-stretch sm:pr-5" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col items-center">
                                 <Heading as="h3">CPF</Heading>
-                                <Input shape="round" name="edittext_one" className="self-stretch sm:pr-5" />
+                                <Input shape="round" name="cpf" className="self-stretch sm:pr-5" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col items-center">
                                 <Heading as="h4" className="relative z-[1]">
                                     Cargo
                                 </Heading>
-                                <Input shape="round" name="edittext_two" className="self-stretch sm:pr-5" />
+                                <Input shape="round" name="cargo" className="self-stretch sm:pr-5" onChange={handleChange} />
                             </div>
                         </div>
-                        <Link to="/consultar-usuario"> {/* Exemplo de link para consultar usuário */}
-                            <Button shape="round" className="mt-[82px] min-w-[156px] font-semibold sm:px-5">
-                                Consultar
-                            </Button>
-                        </Link>
+                        <Button shape="round" className="mt-[82px] min-w-[156px] font-semibold sm:px-5" onClick={handleSubmit}>
+                            Consultar
+                        </Button>
                     </div>
                 </div>
             </div>

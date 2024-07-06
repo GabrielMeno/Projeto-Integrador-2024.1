@@ -10,6 +10,7 @@ import PainelUsuarios from 'pages/PainelUsuarios';
 import EditarUsuario from 'pages/EditarUsuario';
 import CadastrarUsuario from 'pages/CadastrarUsuario';
 import Login from 'pages/Login';
+import ResultadoUsuarios from 'pages/ResultadoUsuarios'; // Importe a nova página
 
 const ProjectRoutes = () => {
   let navigate = useNavigate();
@@ -30,6 +31,7 @@ const ProjectRoutes = () => {
     { path: '/painelusuarios', element: <PainelUsuarios /> },
     { path: '/editarusuario', element: <EditarUsuario /> },
     { path: '/cadastrarusuario', element: <CadastrarUsuario /> },
+    { path: '/consultar-usuario', element: <ResultadoUsuarios /> }, // Adicione a nova rota
   ]);
 
   return element;

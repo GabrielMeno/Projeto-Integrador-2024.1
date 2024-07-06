@@ -16,9 +16,7 @@ CREATE TABLE Usuario (
     user_token varchar,
     nome VARCHAR(100),
     nome_de_usuario VARCHAR(50),
-    logradouro VARCHAR(100),
-    numero VARCHAR(10),
-    complemento VARCHAR(50),
+    cargo VARCHAR(100),
     tipo INT
 );
 

@@ -184,20 +184,107 @@ app.post("/cliente", requireJWTAuth, async (req, res) => {
 
 app.post("/novoUsuario", async (req, res) => {
     const saltRounds = 10;
-    try {
-        const userName = req.body.nome_de_usuario;
-        const userPasswd = req.body.senha;
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hashedPasswd = bcrypt.hashSync(userPasswd, salt);
+    const { nome, nome_de_usuario, cargo, senha, cpf, rg, permissoes } = req.body;
 
-        console.log(`Username: ${userName} - Password: ${hashedPasswd}`);
-        db.none(
-            "INSERT INTO Usuario (nome_de_usuario, senha) VALUES ($1, $2);",
-            [userName, hashedPasswd]
+    try {
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPasswd = bcrypt.hashSync(senha, salt);
+
+        await db.none(
+            "INSERT INTO Usuario (cpf, rg, senha, nome, nome_de_usuario, cargo, permissoes, tipo) VALUES ($1, $2, $3, $4, $5, $6, $7, 2);",
+            [cpf, rg, hashedPasswd, nome, nome_de_usuario, cargo, permissoes]
         );
         res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        console.error('Erro ao cadastrar usuário:', error);
+        res.sendStatus(400);
+    }
+});
+
+
+app.get("/consultarUsuarios", requireJWTAuth, async (req, res) => {
+    const { nome_de_usuario, cpf, cargo } = req.query;
+
+    let query = `SELECT * FROM Usuario WHERE 1=1`;
+    let queryParams = [];
+
+    if (nome_de_usuario) {
+        query += ` AND nome_de_usuario ILIKE $${queryParams.length + 1}`;
+        queryParams.push(`%${nome_de_usuario}%`);
+    }
+    if (cpf) {
+        query += ` AND cpf ILIKE $${queryParams.length + 1}`;
+        queryParams.push(`%${cpf}%`);
+    }
+    if (cargo) {
+        query += ` AND cargo ILIKE $${queryParams.length + 1}`;
+        queryParams.push(`%${cargo}%`);
+    }
+
+    console.log('Query:', query);
+    console.log('Query Params:', queryParams);
+
+    try {
+        const usuarios = await db.any(query, queryParams);
+        console.log('Usuários encontrados:', usuarios);
+        res.status(200).json(usuarios);
+    } catch (error) {
+        console.error('Erro ao executar a consulta:', error);
+        res.sendStatus(400);
+    }
+});
+
+
+app.get("/usuario", requireJWTAuth, async (req, res) => {
+    const { cpf } = req.query;
+
+    try {
+        const user = await db.one("SELECT * FROM Usuario WHERE cpf = $1", [cpf]);
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        res.sendStatus(400);
+    }
+});
+
+
+app.put("/usuario", requireJWTAuth, async (req, res) => {
+    const { cpf } = req.query;
+    const { nome, nome_de_usuario, cargo, rg, senha, permissoes } = req.body;
+
+    try {
+        const fields = [
+            { field: 'nome', value: nome },
+            { field: 'nome_de_usuario', value: nome_de_usuario },
+            { field: 'cargo', value: cargo },
+            { field: 'rg', value: rg },
+            { field: 'permissoes', value: permissoes }
+        ];
+
+        if (senha) {
+            const hashedPasswd = bcrypt.hashSync(senha, bcrypt.genSaltSync(10));
+            fields.push({ field: 'senha', value: hashedPasswd });
+        }
+
+        const setClause = fields
+            .filter(({ value }) => value !== undefined)
+            .map(({ field }, index) => `${field} = $${index + 1}`)
+            .join(', ');
+
+        const values = fields
+            .filter(({ value }) => value !== undefined)
+            .map(({ value }) => value);
+
+        values.push(cpf);
+
+        await db.none(
+            `UPDATE Usuario SET ${setClause} WHERE cpf = $${values.length}`,
+            values
+        );
+
+        res.status(200).send('Usuário atualizado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
         res.sendStatus(400);
     }
 });
