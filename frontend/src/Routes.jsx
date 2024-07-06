@@ -13,7 +13,7 @@ import Login from 'pages/Login';
 
 const ProjectRoutes = () => {
   let element = useRoutes([
-    { path: '/', element: <Home /> },
+    { path: '/', element: <Login /> },
     { path: '*', element: <NotFound /> },
     { path: '/painelprincipal', element: <PainelPrincipal /> },
     { path: '/login', element: <Login /> },
