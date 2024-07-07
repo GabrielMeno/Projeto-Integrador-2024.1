@@ -38,11 +38,20 @@ const Input = React.forwardRef(
   ) => {
     return (
       <label
-        className={`${className} flex items-center justify-center cursor-text border-indigo-700 border-2 border-solid rouded-[16px] ${(shape && shapes[shape])|| ""} ${ variants[variant]?.[color] || variant[variant] || ""} ${sizes[size] || ""}`}
+        className={`${className} flex items-center justify-center cursor-text ${(shape && shapes[shape]) || ""} ${
+          variants[variant]?.[color] || variants[variant] || ""
+        } ${sizes[size] || ""}`}
       >
-        {!!label && label}
+        {!!label && <span>{label}</span>}
         {!!prefix && prefix}
-        <input ref={ref} type={type} name={name} placeholder={placeholder} onChange={onChange} {...restProps} />
+        <input
+          ref={ref}
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          onChange={onChange}
+          {...restProps}
+        />
         {!!suffix && suffix}
       </label>
     );
@@ -54,7 +63,7 @@ Input.propTypes = {
   name: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  label: PropTypes.string,
+  label: PropTypes.node,
   prefix: PropTypes.node,
   suffix: PropTypes.node,
   onChange: PropTypes.func,

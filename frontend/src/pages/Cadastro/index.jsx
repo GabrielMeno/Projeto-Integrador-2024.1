@@ -1,15 +1,114 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Input, Heading, SelectBox, TextArea, Img, Text } from "../../components";
-
-const dropDownOptions = [
-    { label: "Option1", value: "option1" },
-    { label: "Option2", value: "option2" },
-    { label: "Option3", value: "option3" },
-];
+import axios from "axios";
+import dayjs from "dayjs"; // Biblioteca para manipulação de datas
 
 export default function CadastroPage() {
+    const [formData, setFormData] = useState({
+        nome: '',
+        endereco: {
+            logradouro: '',
+            numero: '',
+            complemento: ''
+        },
+        email: '',
+        telefone: '',
+        cpfCnpj: '',
+        data: '',
+        dataDeEntrega: '',
+        status: 'em aberto', // Campo fixo
+        reclamacoes: '',
+        pecas: '',
+        descricao: '',
+        funcionario: '', // Inicializado como string vazia
+        valor: ''
+    });
+    const [funcionarios, setFuncionarios] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Carregar funcionários do banco
+        const fetchFuncionarios = async () => {
+            const token = localStorage.getItem('token'); // Obtenha o token do localStorage
+            try {
+                const response = await axios.get('http://localhost:3010/funcionarios', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Adicione o token no cabeçalho
+                    }
+                });
+                setFuncionarios(response.data);
+            } catch (error) {
+                console.error('Erro ao buscar funcionários:', error);
+            }
+        };
+
+        fetchFuncionarios();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => {
+            if (name.startsWith('endereco.')) {
+                const [_, key] = name.split('.');
+                return {
+                    ...prevState,
+                    endereco: {
+                        ...prevState.endereco,
+                        [key]: value
+                    }
+                };
+            } else {
+                return { ...prevState, [name]: value };
+            }
+        });
+    };
+
+    const handleSelectChange = (e) => {
+        console.log('Selected option:', e);
+        setFormData(prevState => ({ ...prevState, funcionario: e.target.value }));
+    };
+
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        const formattedDate = dayjs(value, 'YYYY-MM-DD').isValid() ? value : '';
+        setFormData(prevState => ({ ...prevState, [name]: formattedDate }));
+    };
+
+    const handleSubmit = async () => {
+        const token = localStorage.getItem('token'); // Obtenha o token do localStorage
+    
+        // Log de dados para verificação
+        console.log('Dados enviados:', formData);
+    
+        // Verificação de campos obrigatórios
+        if (!formData.nome || !formData.email || !formData.telefone || !formData.cpfCnpj || 
+            !formData.data || !formData.dataDeEntrega || !formData.funcionario || !formData.valor) {
+            console.error('Campos obrigatórios estão faltando');
+            return;
+        }
+    
+        try {
+            // Converter valor para string e substituir vírgula por ponto
+            const valorFormatado = String(formData.valor).replace(',', '.');
+    
+            const response = await axios.post('http://localhost:3010/novaOrdem', {
+                ...formData,
+                valor: parseFloat(valorFormatado) // Corrige o formato do valor
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adicione o token no cabeçalho
+                }
+            });
+            console.log('Resposta do servidor:', response.data);
+            navigate('/painelprincipal');
+        } catch (error) {
+            console.error('Erro ao cadastrar ordem', error.response ? error.response.data : error);
+        }
+    };
+    
+
     return (
         <>
             <Helmet>
@@ -58,22 +157,38 @@ export default function CadastroPage() {
                                                     <Heading as="h2" className="relative z-[2]">
                                                         Nome
                                                     </Heading>
-                                                    <Input shape="round" name="edittext" className="self-stretch sm:pr-5" />
+                                                    <Input shape="round" name="nome" value={formData.nome} onChange={handleChange} className="self-stretch sm:pr-5" />
                                                     <div className="mt-[22px] flex flex-col items-center self-stretch">
                                                         <Heading as="h3" className="relative z-[1]">
-                                                            Endereço
+                                                            Logradouro
                                                         </Heading>
-                                                        <Input shape="round" name="edittext_one" className="self-stretch sm:pr-5" />
+                                                        <Input shape="round" name="endereco.logradouro" value={formData.endereco.logradouro} onChange={handleChange} className="self-stretch sm:pr-5" />
+                                                    </div>
+                                                    <div className="mt-[22px] flex flex-col items-center self-stretch">
+                                                        <Heading as="h3" className="relative z-[1]">
+                                                            Número
+                                                        </Heading>
+                                                        <Input shape="round" name="endereco.numero" value={formData.endereco.numero} onChange={handleChange} className="self-stretch sm:pr-5" />
+                                                    </div>
+                                                    <div className="mt-[22px] flex flex-col items-center self-stretch">
+                                                        <Heading as="h3" className="relative z-[1]">
+                                                            Complemento
+                                                        </Heading>
+                                                        <Input shape="round" name="endereco.complemento" value={formData.endereco.complemento} onChange={handleChange} className="self-stretch sm:pr-5" />
                                                     </div>
                                                     <div className="mt-[1px] flex flex-col items-center self-stretch">
                                                         <Heading as="h4" className="mt-[30px]">
                                                             Email
                                                         </Heading>
-                                                        <Input shape="round" name="edittext_two" className="self-stretch sm:pr-5" />
+                                                        <Input shape="round" name="email" value={formData.email} onChange={handleChange} className="self-stretch sm:pr-5" />
                                                     </div>
                                                     <div className="mt-5 flex flex-col items-center self-stretch">
                                                         <Heading as="h5">Telefone</Heading>
-                                                        <Input shape="round" name="edittext_three" className="self-stretch sm:pr-5" />
+                                                        <Input shape="round" name="telefone" value={formData.telefone} onChange={handleChange} className="self-stretch sm:pr-5" />
+                                                    </div>
+                                                    <div className="mt-5 flex flex-col items-center self-stretch">
+                                                        <Heading as="h5">CPF/CNPJ</Heading>
+                                                        <Input shape="round" name="cpfCnpj" value={formData.cpfCnpj} onChange={handleChange} className="self-stretch sm:pr-5" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -97,15 +212,19 @@ export default function CadastroPage() {
                                                         <Input
                                                             size="xs"
                                                             shape="round"
-                                                            name="calendar"
-                                                            placeholder={`DD/MM/AA`}
+                                                            name="data"
+                                                            type="date"
+                                                            value={formData.data}
+                                                            onChange={handleDateChange}
                                                             className="w-[40%] font-light"
                                                         />
                                                         <Input
                                                             size="xs"
                                                             shape="round"
-                                                            name="calendar_one"
-                                                            placeholder={`DD/MM/AA`}
+                                                            name="dataDeEntrega"
+                                                            type="date"
+                                                            value={formData.dataDeEntrega}
+                                                            onChange={handleDateChange}
                                                             className="w-[40%] font-light"
                                                         />
                                                     </div>
@@ -115,7 +234,7 @@ export default function CadastroPage() {
                                                 <Heading as="p" className="relative z-[3]">
                                                     Status
                                                 </Heading>
-                                                <SelectBox shape="round" name="dropdown" options={dropDownOptions} className="self-stretch" />
+                                                <Input shape="round" name="status" value={formData.status} readOnly className="self-stretch" />
                                             </div>
                                         </div>
                                         <div className="mt-5 flex gap-[22px] self-stretch md:flex-col">
@@ -123,19 +242,19 @@ export default function CadastroPage() {
                                                 <Heading as="p" className="relative z-[4]">
                                                     Reclamações e necessidades
                                                 </Heading>
-                                                <TextArea shape="round" name="textarea" className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="reclamacoes" value={formData.reclamacoes} onChange={handleChange} className="self-stretch !border-indigo-700" />
                                             </div>
                                             <div className="flex w-full flex-col items-center">
                                                 <Heading as="p" className="relative z-[5]">
                                                     Peças do serviço
                                                 </Heading>
-                                                <TextArea shape="round" name="textarea_one" className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="pecas" value={formData.pecas} onChange={handleChange} className="self-stretch !border-indigo-700" />
                                             </div>
                                         </div>
                                         <div className="mt-2.5 flex items-center gap-[22px] self-stretch md:flex-col">
                                             <div className="flex w-full flex-col items-center self-end md:self-auto">
                                                 <Heading as="p">Descrição do serviço</Heading>
-                                                <TextArea shape="round" name="textarea" className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="descricao" value={formData.descricao} onChange={handleChange} className="self-stretch !border-indigo-700" />
                                             </div>
                                             <div className="flex w-full flex-col items-center">
                                                 <Heading as="p" className="relative z-[6]">
@@ -143,8 +262,10 @@ export default function CadastroPage() {
                                                 </Heading>
                                                 <SelectBox 
                                                     shape="round" 
-                                                    name="dropdown_one" 
-                                                    options={dropDownOptions} 
+                                                    name="funcionario" 
+                                                    options={funcionarios.map(f => ({ label: f.nome, value: f.cpf }))} 
+                                                    value={formData.funcionario}
+                                                    onChange={handleSelectChange} // Certifique-se de passar esta função
                                                     className="self-stretch !border-2" 
                                                 />
                                                 <Heading as="p" className="relative z-[7] mt-1">
@@ -153,8 +274,10 @@ export default function CadastroPage() {
                                                 <Input
                                                     size="xs"
                                                     shape="round"
-                                                    name="price"
-                                                    placeholder={`R\$`}
+                                                    name="valor"
+                                                    placeholder={`R$`}
+                                                    value={formData.valor}
+                                                    onChange={handleChange}
                                                     className="self-stretch font-medium sm:pr-5"
                                                 />
                                             </div>
@@ -168,11 +291,9 @@ export default function CadastroPage() {
                                         Cancelar
                                     </Button>
                                 </Link>
-                                <a href="https://www.youtube.com/embed/bv8Fxk@sz7I" target="_blank">
-                                    <Button shape="round" className="min-w-[156px] font-semibold sm:px-5">
-                                        Salvar
-                                    </Button>
-                                </a>
+                                <Button shape="round" className="min-w-[156px] font-semibold sm:px-5" onClick={handleSubmit}>
+                                    Salvar
+                                </Button>
                             </div>
                         </div>
                     </div>

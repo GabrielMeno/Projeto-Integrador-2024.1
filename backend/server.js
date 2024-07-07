@@ -291,3 +291,66 @@ app.put("/usuario", requireJWTAuth, async (req, res) => {
         res.sendStatus(400);
     }
 });
+
+
+app.get("/funcionarios", requireJWTAuth, async (req, res) => {
+    try {
+        const funcionarios = await db.any("SELECT cpf, nome FROM Usuario WHERE tipo = 2;");
+        res.status(200).json(funcionarios);
+    } catch (error) {
+        console.error('Erro ao buscar funcionários:', error);
+        res.sendStatus(400);
+    }
+});
+
+app.post("/novaOrdem", requireJWTAuth, async (req, res) => {
+    const {
+        nome,
+        endereco: { logradouro, numero, complemento },
+        email,
+        telefone,
+        cpfCnpj,
+        data,
+        dataDeEntrega,
+        status,
+        reclamacoes,
+        pecas,
+        descricao,
+        funcionario,
+        valor
+    } = req.body;
+
+    console.log('Dados recebidos no servidor:', req.body);
+
+    try {
+        // Validação dos dados recebidos
+        if (!nome || !email || !telefone || !cpfCnpj || !data || !dataDeEntrega || !funcionario || !valor) {
+            throw new Error('Campos obrigatórios estão faltando');
+        }
+
+        // Verificar se o cliente já existe
+        let cliente = await db.oneOrNone("SELECT cpf_cnpj FROM Cliente WHERE cpf_cnpj = $1;", [cpfCnpj]);
+
+        if (!cliente) {
+            cliente = await db.one(
+                `INSERT INTO Cliente (nome, email, cpf_cnpj, telefone, logradouro, numero, complemento)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                RETURNING cpf_cnpj;`,
+                [nome, email, cpfCnpj, telefone, logradouro, numero, complemento]
+            );
+        }
+
+        await db.none(
+            `INSERT INTO Ordem_de_Servico (data, data_de_entrega, reclamacoes_e_necessidades, status, valor, descricao_do_servico, cliente_cpf_cnpj, usuario_cpf)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
+            [data, dataDeEntrega, reclamacoes, status, parseFloat(valor), descricao, cliente.cpf_cnpj, funcionario]
+        );
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('Erro ao cadastrar ordem:', error);
+        res.status(400).json({ error: 'Erro ao cadastrar ordem', detalhes: error.message });
+    }
+});
+
+

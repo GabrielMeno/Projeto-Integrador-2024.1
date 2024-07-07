@@ -1,8 +1,7 @@
 CREATE TABLE Cliente (
-    ID SERIAL PRIMARY KEY,
+    cpf_cnpj VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(100),
     email VARCHAR(100),
-    cpf_cnpj VARCHAR(20),
     telefone VARCHAR(20),
     logradouro VARCHAR(100),
     numero VARCHAR(10),
@@ -29,17 +28,11 @@ CREATE TABLE Ordem_de_Servico (
     status VARCHAR(20),
     valor DECIMAL(10, 2),
     descricao_do_servico TEXT,
-    cliente_id INT,
+    cliente_cpf_cnpj VARCHAR(20),
     usuario_cpf VARCHAR(11),
-    FOREIGN KEY (cliente_id) REFERENCES Cliente(ID),
+    FOREIGN KEY (cliente_cpf_cnpj) REFERENCES Cliente(cpf_cnpj),
     FOREIGN KEY (usuario_cpf) REFERENCES Usuario(cpf)
 );
 
-
-insert into usuario (cpf, rg, senha, nome, nome_de_usuario, logradouro, numero, complemento, tipo) 
-values('11050140966', '5879808', '1234', 'marco', 'marcola', 'rua independencia', '1365', 'casa', 1);
-
-
-UPDATE Usuario
-SET senha = '$2b$10$sYK9L3XrW1TNQrrpJX1WZuKk255cb6MQooLdhsX7RxXeVegBad5z2'
-WHERE nome_de_usuario = 'marcola';
+INSERT INTO Usuario (cpf, rg, senha, nome, nome_de_usuario, cargo, permissoes, tipo) 
+VALUES ('11050140966', '5879808', '$2b$10$sYK9L3XrW1TNQrrpJX1WZuKk255cb6MQooLdhsX7RxXeVegBad5z2', 'marco', 'marcola', 'Engenheiro', 'Admin', 1);

@@ -2,108 +2,68 @@ import React from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
 
-const shapes = {
-  round: "rounded-[16px]",
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    border: '2px solid #4B0082', // cor da borda indigo
+    borderRadius: '16px', // arredondamento
+    padding: '2px', // padding
+    minHeight: '40px',
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: state.isSelected ? 'white' : '#4B0082',
+    backgroundColor: state.isSelected ? '#4B0082' : 'white',
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: '#4B0082',
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#4B0082',
+  }),
 };
 
-const variants = {
-  outline: {
-    indigo_700: "border-indigo-700 border-[3px] border-solid",
-  },
-};
+const SelectBox = ({ className, name, options, value, onChange }) => {
+  console.log('SelectBox props:', { className, name, options, value, onChange });
 
-const sizes = {
-  xs: "h-[40px] px-5",
-};
+  const handleChange = (selectedOption) => {
+    onChange({
+      target: {
+        name,
+        value: selectedOption ? selectedOption.value : '',
+      }
+    });
+  };
 
-const SelectBox = React.forwardRef(
-  (
-    {
-      children,
-      className = "",
-      options = [],
-      isSearchable = false,
-      isMulti = false,
-      indicator,
-      shape,
-      variant = "outline",
-      size = "xs",
-      color = "indigo_700",
-      ...restProps
-    },
-    ref
-  ) => {
-    return (
-      <>
-        <Select
-          ref={ref}
-          options={options}
-          className={`${className} flex ${(shape && shapes[shape]) || ""} ${(size && sizes[size]) || ""} ${(variants[variant]?.[color]) || ""}`}
-          isSearchable={isSearchable}
-          isMulti={isMulti}
-          components={{
-            IndicatorSeparator: () => null,
-            ...(indicator && { DropdownIndicator: () => indicator }),
-          }}
-          styles={{
-            container: (provided) => ({
-              ...provided,
-              zIndex: 0,
-            }),
-            control: (provided) => ({
-              ...provided,
-              backgroundColor: "transparent",
-              border: "0 !important",
-              boxShadow: "0 !important",
-              minHeight: "auto",
-              width: "100%",
-              "&:hover": {
-                border: "0 !important",
-              },
-            }),
-            input: (provided) => ({
-              ...provided,
-              color: "inherit",
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              color: "#000",
-            }),
-            valueContainer: (provided) => ({
-              ...provided,
-              padding: 0,
-            }),
-            placeholder: (provided) => ({
-              ...provided,
-              margin: 0,
-            }),
-            menuPortal: (base) => ({ ...base, zIndex: 999999 }),
-            menu: ({ width, ...css }) => ({ ...css }),
-          }}
-          menuPortalTarget={document.body}
-          closeMenuOnScroll={(event) => {
-            return event.target.id === "scrollContainer";
-          }}
-          {...restProps}
-        />
-        {children}
-      </>
-    );
-  }
-);
+  const selectedValue = options.find(option => option.value === value) || null;
+
+  return (
+    <Select
+      className={className}
+      styles={customStyles}
+      name={name}
+      value={selectedValue}
+      onChange={handleChange}
+      options={options}
+      placeholder="Selecione..."
+      isClearable
+    />
+  );
+};
 
 SelectBox.propTypes = {
   className: PropTypes.string,
-  options: PropTypes.array,
-  isSearchable: PropTypes.bool,
-  isMulti: PropTypes.bool,
-  onChange: PropTypes.func,
+  name: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   value: PropTypes.string,
-  indicator: PropTypes.node,
-  shape: PropTypes.oneOf(["round"]),
-  size: PropTypes.oneOf(["xs"]),
-  variant: PropTypes.oneOf(["outline"]),
-  color: PropTypes.oneOf(["indigo_700"]),
+  onChange: PropTypes.func.isRequired,
 };
 
 export { SelectBox };
