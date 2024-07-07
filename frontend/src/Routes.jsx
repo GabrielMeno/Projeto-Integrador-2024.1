@@ -11,7 +11,7 @@ import PainelUsuarios from 'pages/PainelUsuarios';
 import EditarUsuario from 'pages/EditarUsuario';
 import CadastrarUsuario from 'pages/CadastrarUsuario';
 import Login from 'pages/Login';
-import ResultadoUsuariosPage from 'pages/ResultadoUsuarios';
+import ResultadoUsuarios from 'pages/ResultadoUsuarios';
 import PrivateRoute from './PrivateRoute';
 
 const ProjectRoutes = () => {
@@ -37,7 +37,7 @@ const ProjectRoutes = () => {
         { path: '/painelusuarios', element: <PainelUsuarios /> },
         { path: '/editarusuario', element: <EditarUsuario /> },
         { path: '/cadastrarusuario', element: <CadastrarUsuario /> },
-        { path: '/resultado-usuarios', element: <ResultadoUsuariosPage /> },
+        { path: '/resultado-usuarios', element: <ResultadoUsuarios /> },
       ] 
     }
   ]);

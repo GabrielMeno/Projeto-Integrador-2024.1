@@ -1,11 +1,22 @@
-// src/components/Header.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Img, Heading, Text, Button } from "../../components";
+import { jwtDecode } from 'jwt-decode';
+
 
 export default function Header({ title, showBackButton = true }) {
     const location = useLocation();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    const [userType, setUserType] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            console.log("Decoded Token:", decodedToken); // Log para depuração
+            setUserType(decodedToken.tipo); // Supondo que o tipo de usuário está no campo "tipo"
+        }
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token'); // Remove o token de autenticação
@@ -30,6 +41,13 @@ export default function Header({ title, showBackButton = true }) {
                     {title}
                 </Text>
                 <div className="flex items-center gap-[9px]">
+                    {userType === 1 && (
+                        <Link to="/painelusuarios">
+                            <Button color="blue_A700" size="xs" className="min-w-[142px] self-end rounded-[5px] font-inter font-bold md:self-auto">
+                                Painel de Usuários
+                            </Button>
+                        </Link>
+                    )}
                     <Img
                         src="images/img_image_5.png"
                         alt="imagefive"

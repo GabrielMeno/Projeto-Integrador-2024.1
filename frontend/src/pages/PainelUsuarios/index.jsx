@@ -19,7 +19,7 @@ export default function PainelUsuariosPage() {
 
     const handleSubmit = () => {
         const queryString = new URLSearchParams(formData).toString();
-        navigate(`/consultar-usuario?${queryString}`);
+        navigate(`/resultado-usuarios?${queryString}`); // Certifique-se de que o caminho está correto
     };
 
     return (

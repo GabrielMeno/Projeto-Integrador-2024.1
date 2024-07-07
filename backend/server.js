@@ -97,6 +97,7 @@ passport.serializeUser(function (user, cb) {
         return cb(null, {
             cpf: user.cpf,
             nome_de_usuario: user.nome_de_usuario,
+            tipo: user.tipo
         });
     });
 });
@@ -116,7 +117,7 @@ app.post(
     passport.authenticate("local", { session: false }),
     (req, res) => {
         const token = jwt.sign(
-            { cpf: req.user.cpf }, // payload
+            { cpf: req.user.cpf, tipo: req.user.tipo }, // Inclua o tipo de usuário no payload
             "your-secret-key", // chave secreta
             { expiresIn: "1h" } // opções
         );
@@ -201,7 +202,6 @@ app.post("/novoUsuario", async (req, res) => {
     }
 });
 
-
 app.get("/consultarUsuarios", requireJWTAuth, async (req, res) => {
     const { nome_de_usuario, cpf, cargo } = req.query;
 
@@ -234,7 +234,6 @@ app.get("/consultarUsuarios", requireJWTAuth, async (req, res) => {
     }
 });
 
-
 app.get("/usuario", requireJWTAuth, async (req, res) => {
     const { cpf } = req.query;
 
@@ -246,7 +245,6 @@ app.get("/usuario", requireJWTAuth, async (req, res) => {
         res.sendStatus(400);
     }
 });
-
 
 app.put("/usuario", requireJWTAuth, async (req, res) => {
     const { cpf } = req.query;
