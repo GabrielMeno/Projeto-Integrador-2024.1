@@ -153,17 +153,23 @@ app.get("/clientes", requireJWTAuth, async (req, res) => {
 });
 
 app.get("/cliente", requireJWTAuth, async (req, res) => {
+    const { cpf } = req.query;
+
+    console.log('CPF recebido:', cpf);
+
+    if (!cpf) {
+        return res.status(400).json({ error: 'CPF é obrigatório' });
+    }
+
     try {
-        const clienteId = parseInt(req.query.id);
-        console.log(`Retornando ID: ${clienteId}.`);
-        const clientes = await db.one(
-            "SELECT id, nome, email FROM Cliente WHERE id = $1;",
-            clienteId
-        );
-        res.json(clientes).status(200);
+        const cliente = await db.oneOrNone("SELECT * FROM Cliente WHERE cpf_cnpj = $1;", [cpf]);
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+        res.status(200).json(cliente);
     } catch (error) {
-        console.log(error);
-        res.sendStatus(400);
+        console.error('Erro ao buscar cliente:', error);
+        res.status(500).json({ error: 'Erro ao buscar cliente', detalhes: error.message });
     }
 });
 
@@ -182,6 +188,23 @@ app.post("/cliente", requireJWTAuth, async (req, res) => {
         res.sendStatus(400);
     }
 });
+
+app.put("/cliente", requireJWTAuth, async (req, res) => {
+    const { cpf } = req.query;
+    const { nome, email, telefone, logradouro, numero, complemento } = req.body;
+
+    try {
+        await db.none(
+            `UPDATE Cliente SET nome = $1, email = $2, telefone = $3, logradouro = $4, numero = $5, complemento = $6 WHERE cpf_cnpj = $7`,
+            [nome, email, telefone, logradouro, numero, complemento, cpf]
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('Erro ao atualizar cliente:', error);
+        res.status(400).json({ error: 'Erro ao atualizar cliente', detalhes: error.message });
+    }
+});
+
 
 app.post("/novoUsuario", async (req, res) => {
     const saltRounds = 10;

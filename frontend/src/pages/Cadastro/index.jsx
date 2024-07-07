@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Input, Heading, SelectBox, TextArea, Img, Text } from "../../components";
 import axios from "axios";
-import dayjs from "dayjs"; // Biblioteca para manipulação de datas
+import dayjs from "dayjs";
 
 export default function CadastroPage() {
     const [formData, setFormData] = useState({
@@ -18,24 +18,24 @@ export default function CadastroPage() {
         cpfCnpj: '',
         data: '',
         dataDeEntrega: '',
-        status: 'em aberto', // Campo fixo
+        status: 'em aberto', 
         reclamacoes: '',
         pecas: '',
         descricao: '',
-        funcionario: '', // Inicializado como string vazia
+        funcionario: '',
         valor: ''
     });
     const [funcionarios, setFuncionarios] = useState([]);
+    const [clienteAtual, setClienteAtual] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Carregar funcionários do banco
         const fetchFuncionarios = async () => {
-            const token = localStorage.getItem('token'); // Obtenha o token do localStorage
+            const token = localStorage.getItem('token');
             try {
                 const response = await axios.get('http://localhost:3010/funcionarios', {
                     headers: {
-                        Authorization: `Bearer ${token}` // Adicione o token no cabeçalho
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 setFuncionarios(response.data);
@@ -46,6 +46,31 @@ export default function CadastroPage() {
 
         fetchFuncionarios();
     }, []);
+
+    useEffect(() => {
+        const fetchCliente = async () => {
+            if (formData.cpfCnpj) {
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await axios.get('http://localhost:3010/cliente', {
+                        params: { cpf: formData.cpfCnpj },
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    setClienteAtual(response.data);
+                } catch (error) {
+                    if (error.response && error.response.status === 404) {
+                        console.log('Cliente não encontrado');
+                    } else {
+                        console.error('Erro ao buscar cliente:', error);
+                    }
+                }
+            }
+        };
+
+        fetchCliente();
+    }, [formData.cpfCnpj]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -66,7 +91,6 @@ export default function CadastroPage() {
     };
 
     const handleSelectChange = (e) => {
-        console.log('Selected option:', e);
         setFormData(prevState => ({ ...prevState, funcionario: e.target.value }));
     };
 
@@ -77,28 +101,59 @@ export default function CadastroPage() {
     };
 
     const handleSubmit = async () => {
-        const token = localStorage.getItem('token'); // Obtenha o token do localStorage
-    
-        // Log de dados para verificação
+        const token = localStorage.getItem('token'); 
+        
         console.log('Dados enviados:', formData);
-    
-        // Verificação de campos obrigatórios
+
         if (!formData.nome || !formData.email || !formData.telefone || !formData.cpfCnpj || 
             !formData.data || !formData.dataDeEntrega || !formData.funcionario || !formData.valor) {
             console.error('Campos obrigatórios estão faltando');
             return;
         }
-    
+
+        if (clienteAtual) {
+            const camposDiferentes = [];
+            if (clienteAtual.nome !== formData.nome) camposDiferentes.push('Nome');
+            if (clienteAtual.email !== formData.email) camposDiferentes.push('Email');
+            if (clienteAtual.telefone !== formData.telefone) camposDiferentes.push('Telefone');
+            if (clienteAtual.logradouro !== formData.endereco.logradouro) camposDiferentes.push('Logradouro');
+            if (clienteAtual.numero !== formData.endereco.numero) camposDiferentes.push('Número');
+            if (clienteAtual.complemento !== formData.endereco.complemento) camposDiferentes.push('Complemento');
+
+            if (camposDiferentes.length > 0) {
+                const confirmar = window.confirm(`Os seguintes campos do cliente foram alterados: ${camposDiferentes.join(', ')}. Deseja atualizar os dados do cliente no banco de dados?`);
+                if (confirmar) {
+                    try {
+                        await axios.put('http://localhost:3010/cliente', {
+                            nome: formData.nome,
+                            email: formData.email,
+                            telefone: formData.telefone,
+                            logradouro: formData.endereco.logradouro,
+                            numero: formData.endereco.numero,
+                            complemento: formData.endereco.complemento
+                        }, {
+                            params: { cpf: formData.cpfCnpj },
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        });
+                        console.log('Dados do cliente atualizados com sucesso');
+                    } catch (error) {
+                        console.error('Erro ao atualizar dados do cliente', error);
+                        return;
+                    }
+                }
+            }
+        }
+
         try {
-            // Converter valor para string e substituir vírgula por ponto
             const valorFormatado = String(formData.valor).replace(',', '.');
-    
             const response = await axios.post('http://localhost:3010/novaOrdem', {
                 ...formData,
-                valor: parseFloat(valorFormatado) // Corrige o formato do valor
+                valor: parseFloat(valorFormatado)
             }, {
                 headers: {
-                    Authorization: `Bearer ${token}` // Adicione o token no cabeçalho
+                    Authorization: `Bearer ${token}`
                 }
             });
             console.log('Resposta do servidor:', response.data);
@@ -107,7 +162,6 @@ export default function CadastroPage() {
             console.error('Erro ao cadastrar ordem', error.response ? error.response.data : error);
         }
     };
-    
 
     return (
         <>
@@ -118,7 +172,7 @@ export default function CadastroPage() {
             <div className="flex w-full flex-col items-start gap-[97px] bg-gray-300 py-11 md:gap-[72px] md:py-5 sm:gap-12">
                 <div className="container-xs md:p-5">
                     <header className="flex items-center justify-between gap-5 md:flex-col">
-                        <Link to="/painelprincipal"> {/* Link para voltar ao Painel Principal */}
+                        <Link to="/painelprincipal">
                             <Button
                                 color="red_A700"
                                 size="xs"
@@ -265,7 +319,7 @@ export default function CadastroPage() {
                                                     name="funcionario" 
                                                     options={funcionarios.map(f => ({ label: f.nome, value: f.cpf }))} 
                                                     value={formData.funcionario}
-                                                    onChange={handleSelectChange} // Certifique-se de passar esta função
+                                                    onChange={handleSelectChange}
                                                     className="self-stretch !border-2" 
                                                 />
                                                 <Heading as="p" className="relative z-[7] mt-1">
