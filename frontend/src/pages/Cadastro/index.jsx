@@ -90,8 +90,8 @@ export default function CadastroPage() {
         });
     };
 
-    const handleSelectChange = (e) => {
-        setFormData(prevState => ({ ...prevState, funcionario: e.target.value }));
+    const handleSelectChange = (selectedOption) => {
+        setFormData(prevState => ({ ...prevState, funcionario: selectedOption ? selectedOption.value : '' }));
     };
 
     const handleDateChange = (e) => {

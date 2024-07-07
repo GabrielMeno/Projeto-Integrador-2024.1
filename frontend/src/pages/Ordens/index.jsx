@@ -28,9 +28,8 @@ export default function OrdensPage() {
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-    const handleSelectChange = (selectedOption, actionMeta) => {
-        const { name } = actionMeta;
-        setFormData(prevState => ({ ...prevState, [name]: selectedOption.value }));
+    const handleSelectChange = (selectedOption) => {
+        setFormData(prevState => ({ ...prevState, status: selectedOption ? selectedOption.value : '' }));
     };
 
     const handleSubmit = () => {
@@ -73,6 +72,7 @@ export default function OrdensPage() {
                                     shape="round"
                                     name="status"
                                     options={dropDownOptions}
+                                    value={formData.status}
                                     className="self-stretch"
                                     onChange={handleSelectChange}
                                 />

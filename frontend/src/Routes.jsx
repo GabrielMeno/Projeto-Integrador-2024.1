@@ -19,7 +19,7 @@ const ProjectRoutes = () => {
 
   const handleLoginSuccess = () => {
     console.log("Usuário logado com sucesso!");
-    navigate('/painelprincipal'); // Redireciona para a página principal após o login
+    navigate('/painelprincipal');
   };
 
   let element = useRoutes([
@@ -33,12 +33,12 @@ const ProjectRoutes = () => {
         { path: '/painelprincipal', element: <PainelPrincipal /> },
         { path: '/ordens', element: <Ordens /> },
         { path: '/cadastro', element: <Cadastro /> },
-        { path: '/editarordem/:numero', element: <EditarOrdem /> }, // Corrigindo a rota aqui
+        { path: '/editarordem/:numero', element: <EditarOrdem /> },
         { path: '/painelusuarios', element: <PainelUsuarios /> },
         { path: '/editarusuario', element: <EditarUsuario /> },
         { path: '/cadastrarusuario', element: <CadastrarUsuario /> },
-        { path: '/resultado-usuarios', element: <ResultadoUsuarios /> },
-        { path: '/resultado-ordens', element: <ResultadoOrdens /> }, // Adicionando a rota para resultados de ordens
+        { path: '/resultado-usuarios', element: <ResultadoUsuarios /> }, // Verifique se esta rota está correta
+        { path: '/resultado-ordens', element: <ResultadoOrdens /> }
       ] 
     }
   ]);

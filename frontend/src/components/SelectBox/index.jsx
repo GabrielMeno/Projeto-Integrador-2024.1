@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 const customStyles = {
   control: (provided) => ({
     ...provided,
-    border: '2px solid #4B0082', // cor da borda indigo
-    borderRadius: '16px', // arredondamento
-    padding: '2px', // padding
+    border: '2px solid #4B0082',
+    borderRadius: '16px',
+    padding: '2px',
     minHeight: '40px',
   }),
   option: (provided, state) => ({
@@ -26,15 +26,8 @@ const customStyles = {
 };
 
 const SelectBox = ({ className, name, options, value, onChange }) => {
-  console.log('SelectBox props:', { className, name, options, value, onChange });
-
   const handleChange = (selectedOption) => {
-    onChange({
-      target: {
-        name,
-        value: selectedOption ? selectedOption.value : '',
-      }
-    });
+    onChange(selectedOption);
   };
 
   const selectedValue = options.find(option => option.value === value) || null;
