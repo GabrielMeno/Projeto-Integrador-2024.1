@@ -378,7 +378,7 @@ app.post("/novaOrdem", requireJWTAuth, async (req, res) => {
 
 
 app.get("/consultarOrdens", requireJWTAuth, async (req, res) => {
-    const { data, status, cliente } = req.query;
+    const { dataInicio, dataFim, status } = req.query;
 
     let query = `
         SELECT o.*, c.nome AS cliente_nome
@@ -388,19 +388,19 @@ app.get("/consultarOrdens", requireJWTAuth, async (req, res) => {
     `;
     let queryParams = [];
 
-    if (data) {
-        query += ` AND o.data = $${queryParams.length + 1}`;
-        queryParams.push(data);
+    if (dataInicio) {
+        query += ` AND o.data >= $${queryParams.length + 1}`;
+        queryParams.push(dataInicio);
+    }
+
+    if (dataFim) {
+        query += ` AND o.data <= $${queryParams.length + 1}`;
+        queryParams.push(dataFim);
     }
 
     if (status) {
         query += ` AND o.status = $${queryParams.length + 1}`;
         queryParams.push(status);
-    }
-
-    if (cliente) {
-        query += ` AND c.nome ILIKE $${queryParams.length + 1}`;
-        queryParams.push(`%${cliente}%`);
     }
 
     try {
@@ -457,4 +457,17 @@ app.put("/ordem/:numero", requireJWTAuth, async (req, res) => {
         res.status(400).json({ error: 'Erro ao atualizar ordem' });
     }
 });
+
+app.delete("/ordem/:numero", requireJWTAuth, async (req, res) => {
+    const { numero } = req.params;
+
+    try {
+        await db.none("DELETE FROM Ordem_de_Servico WHERE numero = $1", [numero]);
+        res.status(200).json({ message: "Ordem excluída com sucesso" });
+    } catch (error) {
+        console.error('Erro ao excluir ordem:', error);
+        res.status(400).json({ error: 'Erro ao excluir ordem', detalhes: error.message });
+    }
+});
+
 

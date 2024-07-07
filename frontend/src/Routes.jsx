@@ -12,6 +12,7 @@ import CadastrarUsuario from 'pages/CadastrarUsuario';
 import Login from 'pages/Login';
 import ResultadoUsuarios from 'pages/ResultadoUsuarios';
 import ResultadoOrdens from 'pages/ResultadoOrdens';
+import RelatorioOrdens from 'pages/RelatorioOrdens';
 import PrivateRoute from './PrivateRoute';
 
 const ProjectRoutes = () => {
@@ -35,10 +36,11 @@ const ProjectRoutes = () => {
         { path: '/cadastro', element: <Cadastro /> },
         { path: '/editarordem/:numero', element: <EditarOrdem /> },
         { path: '/painelusuarios', element: <PainelUsuarios /> },
-        { path: '/editarusuario', element: <EditarUsuario /> },
+        { path: '/editarusuario/:cpf', element: <EditarUsuario /> },  // Aqui foi feita a mudança
         { path: '/cadastrarusuario', element: <CadastrarUsuario /> },
-        { path: '/resultado-usuarios', element: <ResultadoUsuarios /> }, // Verifique se esta rota está correta
-        { path: '/resultado-ordens', element: <ResultadoOrdens /> }
+        { path: '/resultado-usuarios', element: <ResultadoUsuarios /> }, 
+        { path: '/resultado-ordens', element: <ResultadoOrdens /> },
+        { path: '/relatorio-ordens', element: <RelatorioOrdens /> },
       ] 
     }
   ]);

@@ -2,24 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Button, Input, Heading } from "../../components";
 import Header from "../../components/Header";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 
 export default function EditarUsuarioPage() {
+    const { cpf } = useParams();
     const [formData, setFormData] = useState({
-        nome: '',
-        nome_de_usuario: '',
         cargo: '',
         senha: '',
         confirmar_senha: '',
-        cpf: '',
-        rg: '',
         permissoes: ''
     });
     const navigate = useNavigate();
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const cpf = params.get('cpf');
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -31,13 +25,9 @@ export default function EditarUsuarioPage() {
                     }
                 });
                 setFormData({
-                    nome: response.data.nome,
-                    nome_de_usuario: response.data.nome_de_usuario,
                     cargo: response.data.cargo,
                     senha: '',
                     confirmar_senha: '',
-                    cpf: response.data.cpf,
-                    rg: response.data.rg,
                     permissoes: response.data.permissoes
                 });
             } catch (error) {
@@ -56,18 +46,14 @@ export default function EditarUsuarioPage() {
     };
 
     const handleSubmit = async () => {
-        if (formData.senha !== formData.confirmar_senha) {
+        if (formData.senha && formData.senha !== formData.confirmar_senha) {
             alert("As senhas não coincidem!");
             return;
         }
 
         const dataToSend = {
-            nome: formData.nome,
-            nome_de_usuario: formData.nome_de_usuario,
             cargo: formData.cargo,
             senha: formData.senha ? formData.senha : undefined,
-            cpf: formData.cpf,
-            rg: formData.rg,
             permissoes: formData.permissoes
         };
 
@@ -102,14 +88,6 @@ export default function EditarUsuarioPage() {
                                 </Heading>
                                 <div className="flex items-center self-stretch md:flex-col">
                                     <div className="flex w-full flex-col items-start gap-[30px]">
-                                        <div className="flex w-[90%] flex-col items-center gap-0.5 md:w-full">
-                                            <Heading as="h2">Nome Completo</Heading>
-                                            <Input shape="round" name="nome" className="self-stretch sm:pr-5" value={formData.nome} onChange={handleChange} />
-                                        </div>
-                                        <div className="flex w-[90%] flex-col items-center md:w-full">
-                                            <Heading as="h3">Nome de Usuário</Heading>
-                                            <Input shape="round" name="nome_de_usuario" className="self-stretch sm:pr-5" value={formData.nome_de_usuario} onChange={handleChange} />
-                                        </div>
                                         <div className="flex w-[90%] flex-col items-start md:w-full">
                                             <Heading as="h4" className="relative z-[1] ml-[158px] md:ml-0">
                                                 Cargo
@@ -124,16 +102,6 @@ export default function EditarUsuarioPage() {
                                         </div>
                                     </div>
                                     <div className="flex w-full flex-col items-end gap-[30px]">
-                                        <div className="flex w-[90%] flex-col items-center md:w-full">
-                                            <Heading as="h6">CPF</Heading>
-                                            <Input shape="round" name="cpf" className="self-stretch sm:pr-5" value={formData.cpf} onChange={handleChange} readOnly />
-                                        </div>
-                                        <div className="flex w-[90%] flex-col items-center md:w-full">
-                                            <Heading as="p" className="h-[20px] w-[20px]">
-                                                RG
-                                            </Heading>
-                                            <Input shape="round" name="rg" className="self-stretch sm:pr-5" value={formData.rg} onChange={handleChange} />
-                                        </div>
                                         <div className="flex w-[90%] flex-col items-center md:w-full">
                                             <Heading as="p">Permissões</Heading>
                                             <Input shape="round" name="permissoes" className="self-stretch sm:pr-5" value={formData.permissoes} onChange={handleChange} />

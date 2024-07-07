@@ -5,7 +5,6 @@ import PainelPrincipalRowordensdeserv from "../../components/PainelPrincipalRowo
 import Header from "../../components/Header";
 import { jwtDecode } from 'jwt-decode';
 
-
 export default function PainelPrincipalPage() {
     const [userType, setUserType] = useState(null);
 
@@ -20,7 +19,7 @@ export default function PainelPrincipalPage() {
 
     const data = [
         { link: "/ordens", image: "/images/img_image_2.png", text: "Ordens de serviço" },
-        { link: "/gerarrelatorio", image: "/images/img_image_3.png", text: "Gerar relatório" },
+        { link: "/relatorio-ordens", image: "/images/img_image_3.png", text: "Gerar relatório" }, // Atualize o link aqui
     ];
 
     if (userType === 1) {

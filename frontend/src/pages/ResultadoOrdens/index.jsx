@@ -4,20 +4,27 @@ import { useLocation, Link } from "react-router-dom";
 import { Button, Heading } from "../../components";
 import Header from "../../components/Header";
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 export default function ResultadoOrdensPage() {
     const [ordens, setOrdens] = useState([]);
+    const [isAdmin, setIsAdmin] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
         const fetchOrdens = async () => {
-            const token = localStorage.getItem('token'); // Obtenha o token do localStorage
+            const token = localStorage.getItem('token');
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                setIsAdmin(decodedToken.tipo === 1); // Supondo que tipo 1 é administrador
+            }
+
             try {
                 const params = new URLSearchParams(location.search);
                 console.log('Params:', params.toString());
                 const response = await axios.get('http://localhost:3010/consultarOrdens', {
                     headers: {
-                        Authorization: `Bearer ${token}` // Adicione o token no cabeçalho
+                        Authorization: `Bearer ${token}`
                     },
                     params
                 });
@@ -30,6 +37,25 @@ export default function ResultadoOrdensPage() {
 
         fetchOrdens();
     }, [location.search]);
+
+    const handleDelete = async (numero) => {
+        const token = localStorage.getItem('token');
+        const confirmed = window.confirm("Tem certeza que deseja excluir esta ordem?");
+        if (confirmed) {
+            try {
+                await axios.delete(`http://localhost:3010/ordem/${numero}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setOrdens(prevOrdens => prevOrdens.filter(ordem => ordem.numero !== numero));
+                alert('Ordem excluída com sucesso!');
+            } catch (error) {
+                console.error('Erro ao excluir ordem:', error);
+                alert('Erro ao excluir ordem. Tente novamente.');
+            }
+        }
+    };
 
     return (
         <>
@@ -55,11 +81,22 @@ export default function ResultadoOrdensPage() {
                                         <p><strong>Data de Entrega:</strong> {ordem.data_de_entrega}</p>
                                         <p><strong>Descrição:</strong> {ordem.descricao_do_servico}</p>
                                     </div>
-                                    <Link to={`/editarordem/${ordem.numero}`} className="mt-4">
-                                        <Button shape="round" className="font-semibold sm:px-5">
-                                            Editar
-                                        </Button>
-                                    </Link>
+                                    <div className="flex mt-4">
+                                        <Link to={`/editarordem/${ordem.numero}`} className="mr-4">
+                                            <Button shape="round" className="font-semibold sm:px-5">
+                                                Editar
+                                            </Button>
+                                        </Link>
+                                        {isAdmin && (
+                                            <Button 
+                                                shape="round" 
+                                                className="font-semibold sm:px-5 bg-red-500 text-white" 
+                                                onClick={() => handleDelete(ordem.numero)}
+                                            >
+                                                Excluir
+                                            </Button>
+                                        )}
+                                    </div>
                                 </div>
                             ))
                         ) : (
