@@ -1,6 +1,6 @@
+// src/components/Header.js
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { Img, Heading, Text, Button } from "../../components";
 
 export default function Header({ title, showBackButton = true }) {
@@ -8,7 +8,8 @@ export default function Header({ title, showBackButton = true }) {
     const navigate = useNavigate(); 
 
     const handleLogout = () => {
-        navigate("/login"); 
+        localStorage.removeItem('token'); // Remove o token de autenticação
+        navigate("/login"); // Redireciona para a página de login
     };
 
     return (
