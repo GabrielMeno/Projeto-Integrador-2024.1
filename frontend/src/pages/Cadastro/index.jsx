@@ -18,7 +18,7 @@ export default function CadastroPage() {
         cpfCnpj: '',
         data: '',
         dataDeEntrega: '',
-        status: 'em aberto', 
+        status: 'Em aberto', 
         reclamacoes: '',
         pecas: '',
         descricao: '',

@@ -1,26 +1,67 @@
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Button, Input, Heading, SelectBox, TextArea, Img, Text } from "../../components";
-import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const dropDownOptions = [
-    { label: "Em aberto", value: "status1" },
-    { label: "Em execução", value: "status2" },
-    { label: "Aguardando aprovação", value: "status3" },
-    { label: "Aguardando peça", value: "status4" },
-    { label: "Em processo", value: "status5" },
-    { label: "Recusada", value: "status6" },
-    { label: "Finalizada", value: "status7" },
-    { label: "Em garantia", value: "status8" },
+    { label: "Em aberto", value: "em_aberto" },
+    { label: "Em execução", value: "em_execucao" },
+    { label: "Aguardando aprovação", value: "aguardando_aprovacao" },
+    { label: "Aguardando peça", value: "aguardando_peca" },
+    { label: "Em processo", value: "em_processo" },
+    { label: "Recusada", value: "recusada" },
+    { label: "Finalizada", value: "finalizada" },
+    { label: "Em garantia", value: "em_garantia" },
 ];
 
-/*
-O Sistema deve permitir gerar um relatório filtrado por data e/ou status 
-mostrando as ordens de serviço, dividindo-as em: em aberto, em execução,
- aguardando aprovação, aguardando peça, em processo, recusada, finalizada
-  e em garantia.
-*/
 export default function EditarOrdemPage() {
+    const [ordem, setOrdem] = useState(null);
+    const [status, setStatus] = useState('');
+    const { numero } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchOrdem = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get(`http://localhost:3010/ordem/${numero}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setOrdem(response.data);
+                setStatus(response.data.status);
+            } catch (error) {
+                console.error('Erro ao buscar ordem:', error);
+            }
+        };
+
+        fetchOrdem();
+    }, [numero]);
+
+    const handleStatusChange = (selectedOption) => {
+        setStatus(selectedOption.value);
+    };
+
+    const handleSubmit = async () => {
+        const token = localStorage.getItem('token');
+        try {
+            await axios.put(`http://localhost:3010/ordem/${numero}`, { status }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            navigate('/ordens');
+        } catch (error) {
+            console.error('Erro ao atualizar ordem:', error);
+        }
+    };
+
+    if (!ordem) {
+        return <div>Carregando...</div>;
+    }
+
     return (
         <>
             <Helmet>
@@ -74,23 +115,23 @@ export default function EditarOrdemPage() {
                                                     <Heading as="h2" className="relative z-[2]">
                                                         Nome
                                                     </Heading>
-                                                    <Input shape="round" name="edittext" className="self-stretch sm:pr-5" />
+                                                    <Input shape="round" name="nome" value={ordem.cliente_nome || ''} readOnly className="self-stretch sm:pr-5" />
                                                     <div className="mt-[22px] flex flex-col items-center self-stretch">
                                                         <Heading as="h3" className="relative z-[1]">
                                                             Endereço
                                                         </Heading>
-                                                        <Input shape="round" name="edittext_one" className="self-stretch sm:pr-5" />
+                                                        <Input shape="round" name="endereco" value={`${ordem.cliente_logradouro}, ${ordem.cliente_numero} - ${ordem.cliente_complemento}`} readOnly className="self-stretch sm:pr-5" />
                                                     </div>
                                                     <div className="mt-[1px] flex flex-col items-center self-stretch">
                                                         <Heading as="h4" className="mt-[30px]">
                                                             Email
                                                         </Heading>
-                                                        <Input shape="round" name="edittext_two" className="self-stretch sm:pr-5" />
+                                                        <Input shape="round" name="email" value={ordem.cliente_email || ''} readOnly className="self-stretch sm:pr-5" />
                                                     </div>
                                                 </div>
                                                 <div className="mt-5 flex flex-col items-center self-stretch">
                                                     <Heading as="h5">Telefone</Heading>
-                                                    <Input shape="round" name="edittext_three" className="self-stretch sm:pr-5" />
+                                                    <Input shape="round" name="telefone" value={ordem.cliente_telefone || ''} readOnly className="self-stretch sm:pr-5" />
                                                 </div>
                                             </div>
                                             <div className="h-full w-[4px] bg-indigo-700 sm:h-[4px] sm:w-full" />
@@ -113,15 +154,17 @@ export default function EditarOrdemPage() {
                                                         <Input
                                                             size="xs"
                                                             shape="round"
-                                                            name="calendar"
-                                                            placeholder={`DD/MM/AA`}
+                                                            name="data"
+                                                            value={ordem.data || ''}
+                                                            readOnly
                                                             className="w-[40%] font-light"
                                                         />
                                                         <Input
                                                             size="xs"
                                                             shape="round"
-                                                            name="calendar_one"
-                                                            placeholder={`DD/MM/AA`}
+                                                            name="dataDeEntrega"
+                                                            value={ordem.data_de_entrega || ''}
+                                                            readOnly
                                                             className="w-[40%] font-light"
                                                         />
                                                     </div>
@@ -131,7 +174,14 @@ export default function EditarOrdemPage() {
                                                 <Heading as="p" className="relative z-[3]">
                                                     Status
                                                 </Heading>
-                                                <SelectBox shape="round" name="dropdown" options={dropDownOptions} className="self-stretch" />
+                                                <SelectBox
+                                                    shape="round"
+                                                    name="status"
+                                                    options={dropDownOptions}
+                                                    value={dropDownOptions.find(option => option.value === status)}
+                                                    onChange={handleStatusChange}
+                                                    className="self-stretch"
+                                                />
                                             </div>
                                         </div>
                                         <div className="mt-5 flex gap-[22px] self-stretch md:flex-col">
@@ -139,38 +189,34 @@ export default function EditarOrdemPage() {
                                                 <Heading as="p" className="relative z-[4]">
                                                     Reclamações e necessidades
                                                 </Heading>
-                                                <TextArea shape="round" name="textarea" className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="reclamacoes" value={ordem.reclamacoes_e_necessidades || ''} readOnly className="self-stretch !border-indigo-700" />
                                             </div>
                                             <div className="flex w-full flex-col items-center">
                                                 <Heading as="p" className="relative z-[5]">
                                                     Peças do serviço
                                                 </Heading>
-                                                <TextArea shape="round" name="textarea_one" className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="pecas" value={ordem.pecas || ''} readOnly className="self-stretch !border-indigo-700" />
                                             </div>
                                         </div>
                                         <div className="mt-2.5 flex items-center gap-[22px] self-stretch md:flex-col">
                                             <div className="flex w-full flex-col items-center self-end md:self-auto">
                                                 <Heading as="p">Descrição do serviço</Heading>
-                                                <TextArea shape="round" name="textarea" className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="descricao" value={ordem.descricao_do_servico || ''} readOnly className="self-stretch !border-indigo-700" />
                                             </div>
                                             <div className="flex w-full flex-col items-center">
                                                 <Heading as="p" className="relative z-[6]">
                                                     Funcionário responsável
                                                 </Heading>
-                                                <SelectBox 
-                                                    shape="round" 
-                                                    name="dropdown_one" 
-                                                    options={dropDownOptions} 
-                                                    className="self-stretch !border-2" 
-                                                />
+                                                <Input shape="round" name="funcionario" value={ordem.funcionario_responsavel || ''} readOnly className="self-stretch sm:pr-5" />
                                                 <Heading as="p" className="relative z-[7] mt-1">
                                                     Valor do serviço
                                                 </Heading>
                                                 <Input
                                                     size="xs"
                                                     shape="round"
-                                                    name="price"
-                                                    placeholder={`R\$`}
+                                                    name="valor"
+                                                    value={ordem.valor || ''}
+                                                    readOnly
                                                     className="self-stretch font-medium sm:pr-5"
                                                 />
                                             </div>
@@ -184,11 +230,9 @@ export default function EditarOrdemPage() {
                                         Cancelar
                                     </Button>
                                 </Link>
-                                <a href="https://www.youtube.com/embed/bv8Fxk@sz7I" target="_blank">
-                                    <Button shape="round" className="min-w-[156px] font-semibold sm:px-5">
-                                        Salvar
-                                    </Button>
-                                </a>
+                                <Button shape="round" className="min-w-[156px] font-semibold sm:px-5" onClick={handleSubmit}>
+                                    Salvar
+                                </Button>
                             </div>
                         </div>
                     </div>

@@ -377,3 +377,84 @@ app.post("/novaOrdem", requireJWTAuth, async (req, res) => {
 });
 
 
+app.get("/consultarOrdens", requireJWTAuth, async (req, res) => {
+    const { data, status, cliente } = req.query;
+
+    let query = `
+        SELECT o.*, c.nome AS cliente_nome
+        FROM Ordem_de_Servico o
+        JOIN Cliente c ON o.cliente_cpf_cnpj = c.cpf_cnpj
+        WHERE 1=1
+    `;
+    let queryParams = [];
+
+    if (data) {
+        query += ` AND o.data = $${queryParams.length + 1}`;
+        queryParams.push(data);
+    }
+
+    if (status) {
+        query += ` AND o.status = $${queryParams.length + 1}`;
+        queryParams.push(status);
+    }
+
+    if (cliente) {
+        query += ` AND c.nome ILIKE $${queryParams.length + 1}`;
+        queryParams.push(`%${cliente}%`);
+    }
+
+    try {
+        const ordens = await db.any(query, queryParams);
+        res.status(200).json(ordens);
+    } catch (error) {
+        console.error('Erro ao buscar ordens:', error);
+        res.status(400).json({ error: 'Erro ao buscar ordens' });
+    }
+});
+
+
+
+app.get("/ordem/:numero", requireJWTAuth, async (req, res) => {
+    const { numero } = req.params;
+
+    try {
+        const ordem = await db.oneOrNone(`
+            SELECT o.*, c.nome AS cliente_nome, c.logradouro AS cliente_logradouro, c.numero AS cliente_numero,
+                   c.complemento AS cliente_complemento, c.email AS cliente_email, c.telefone AS cliente_telefone
+            FROM Ordem_de_Servico o
+            JOIN Cliente c ON o.cliente_cpf_cnpj = c.cpf_cnpj
+            WHERE o.numero = $1
+        `, [numero]);
+
+        if (ordem) {
+            res.status(200).json(ordem);
+        } else {
+            res.status(404).json({ error: "Ordem não encontrada" });
+        }
+    } catch (error) {
+        console.error('Erro ao buscar ordem:', error);
+        res.status(400).json({ error: 'Erro ao buscar ordem' });
+    }
+});
+
+
+
+
+app.put("/ordem/:numero", requireJWTAuth, async (req, res) => {
+    const { numero } = req.params;
+    const { status } = req.body;
+
+    try {
+        await db.none(`
+            UPDATE Ordem_de_Servico
+            SET status = $1
+            WHERE numero = $2
+        `, [status, numero]);
+
+        res.status(200).json({ message: "Ordem atualizada com sucesso" });
+    } catch (error) {
+        console.error('Erro ao atualizar ordem:', error);
+        res.status(400).json({ error: 'Erro ao atualizar ordem' });
+    }
+});
+
