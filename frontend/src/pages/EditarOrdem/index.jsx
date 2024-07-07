@@ -5,14 +5,14 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const dropDownOptions = [
-    { label: "Em aberto", value: "em_aberto" },
-    { label: "Em execução", value: "em_execucao" },
-    { label: "Aguardando aprovação", value: "aguardando_aprovacao" },
-    { label: "Aguardando peça", value: "aguardando_peca" },
-    { label: "Em processo", value: "em_processo" },
-    { label: "Recusada", value: "recusada" },
-    { label: "Finalizada", value: "finalizada" },
-    { label: "Em garantia", value: "em_garantia" },
+    { label: "Em aberto", value: "Em aberto" },
+    { label: "Em execução", value: "Em execução" },
+    { label: "Aguardando aprovação", value: "Aguardando aprovação" },
+    { label: "Aguardando peça", value: "Aguardando peça" },
+    { label: "Em processo", value: "Em processo" },
+    { label: "Recusada", value: "Recusada" },
+    { label: "Finalizada", value: "Finalizada" },
+    { label: "Em garantia", value: "Em garantia" },
 ];
 
 export default function EditarOrdemPage() {
@@ -41,7 +41,8 @@ export default function EditarOrdemPage() {
     }, [numero]);
 
     const handleStatusChange = (selectedOption) => {
-        setStatus(selectedOption.value);
+        console.log("Selected status:", selectedOption); // Log para depuração
+        setStatus(selectedOption ? selectedOption.value : '');
     };
 
     const handleSubmit = async () => {
@@ -178,7 +179,7 @@ export default function EditarOrdemPage() {
                                                     shape="round"
                                                     name="status"
                                                     options={dropDownOptions}
-                                                    value={dropDownOptions.find(option => option.value === status)}
+                                                    value={status}
                                                     onChange={handleStatusChange}
                                                     className="self-stretch"
                                                 />

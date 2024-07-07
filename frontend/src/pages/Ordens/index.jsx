@@ -5,15 +5,16 @@ import Header from "../../components/Header";
 import { Link, useNavigate } from "react-router-dom";
 
 const dropDownOptions = [
-    { label: "Em aberto", value: "em_aberto" },
-    { label: "Em execução", value: "em_execucao" },
-    { label: "Aguardando aprovação", value: "aguardando_aprovacao" },
-    { label: "Aguardando peça", value: "aguardando_peca" },
-    { label: "Em processo", value: "em_processo" },
-    { label: "Recusada", value: "recusada" },
-    { label: "Finalizada", value: "finalizada" },
-    { label: "Em garantia", value: "em_garantia" },
+    { label: "Em aberto", value: "Em aberto" },
+    { label: "Em execução", value: "Em execução" },
+    { label: "Aguardando aprovação", value: "Aguardando aprovação" },
+    { label: "Aguardando peça", value: "Aguardando peça" },
+    { label: "Em processo", value: "Em processo" },
+    { label: "Recusada", value: "Recusada" },
+    { label: "Finalizada", value: "Finalizada" },
+    { label: "Em garantia", value: "Em garantia" },
 ];
+
 
 export default function OrdensPage() {
     const [formData, setFormData] = useState({
