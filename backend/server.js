@@ -4,12 +4,12 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");  // Use bcryptjs instead
+const bcrypt = require("bcryptjs");  
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const pgp = require("pg-promise")({});
 
 const usuario = "postgres";
-const senha = "1234";
+const senha = "postgres";
 const db = pgp(`postgres://${usuario}:${senha}@localhost:5432/topduo`);
 
 const app = express();
@@ -36,15 +36,13 @@ passport.use(
         },
         async (username, password, done) => {
             try {
-                console.log("Tentando autenticar usuário:", username);
                 const user = await db.oneOrNone(
                     "SELECT * FROM Usuario WHERE nome_de_usuario = $1;",
                     [username]
                 );
 
                 if (!user) {
-                    console.log("Usuário não encontrado:", username);
-                    return done(null, false, { message: "Usuário incorreto." });
+                    return done(null, false, { message: "Usuário não encontrado." });
                 }
 
                 const passwordMatch = await bcrypt.compare(
@@ -53,10 +51,8 @@ passport.use(
                 );
 
                 if (passwordMatch) {
-                    console.log("Usuário autenticado!");
                     return done(null, user);
                 } else {
-                    console.log("Senha incorreta para usuário:", username);
                     return done(null, false, { message: "Senha incorreta." });
                 }
             } catch (error) {
@@ -117,12 +113,10 @@ app.post(
     passport.authenticate("local", { session: false }),
     (req, res) => {
         const token = jwt.sign(
-            { cpf: req.user.cpf, tipo: req.user.tipo }, // Inclua o tipo de usuário no payload
-            "your-secret-key", // chave secreta
-            { expiresIn: "1h" } // opções
+            { cpf: req.user.cpf, tipo: req.user.tipo }, 
+            "your-secret-key", 
+            { expiresIn: "1h" } 
         );
-
-        console.log("Token gerado:", token); // Adicione esta linha para verificar o token gerado
 
         res.json({ message: "Login successful", token: token });
     }
@@ -144,7 +138,6 @@ app.get("/", (req, res) => {
 app.get("/clientes", requireJWTAuth, async (req, res) => {
     try {
         const clientes = await db.any("SELECT * FROM Cliente;");
-        console.log("Retornando todos clientes.");
         res.json(clientes).status(200);
     } catch (error) {
         console.log(error);
@@ -155,7 +148,6 @@ app.get("/clientes", requireJWTAuth, async (req, res) => {
 app.get("/cliente", requireJWTAuth, async (req, res) => {
     const { cpf } = req.query;
 
-    console.log('CPF recebido:', cpf);
 
     if (!cpf) {
         return res.status(400).json({ error: 'CPF é obrigatório' });
@@ -420,9 +412,11 @@ app.get("/ordem/:numero", requireJWTAuth, async (req, res) => {
     try {
         const ordem = await db.oneOrNone(`
             SELECT o.*, c.nome AS cliente_nome, c.logradouro AS cliente_logradouro, c.numero AS cliente_numero,
-                   c.complemento AS cliente_complemento, c.email AS cliente_email, c.telefone AS cliente_telefone
+                   c.complemento AS cliente_complemento, c.email AS cliente_email, c.telefone AS cliente_telefone,
+                   u.nome AS funcionario_nome
             FROM Ordem_de_Servico o
             JOIN Cliente c ON o.cliente_cpf_cnpj = c.cpf_cnpj
+            JOIN Usuario u ON o.usuario_cpf = u.cpf
             WHERE o.numero = $1
         `, [numero]);
 
@@ -437,19 +431,16 @@ app.get("/ordem/:numero", requireJWTAuth, async (req, res) => {
     }
 });
 
-
-
-
 app.put("/ordem/:numero", requireJWTAuth, async (req, res) => {
     const { numero } = req.params;
-    const { status } = req.body;
+    const { status, data_de_entrega, descricao_do_servico, pecas } = req.body;
 
     try {
         await db.none(`
             UPDATE Ordem_de_Servico
-            SET status = $1
-            WHERE numero = $2
-        `, [status, numero]);
+            SET status = $1, data_de_entrega = $2, descricao_do_servico = $3, pecas = $4
+            WHERE numero = $5
+        `, [status, data_de_entrega, descricao_do_servico, pecas, numero]);
 
         res.status(200).json({ message: "Ordem atualizada com sucesso" });
     } catch (error) {
@@ -457,6 +448,8 @@ app.put("/ordem/:numero", requireJWTAuth, async (req, res) => {
         res.status(400).json({ error: 'Erro ao atualizar ordem' });
     }
 });
+
+
 
 app.delete("/ordem/:numero", requireJWTAuth, async (req, res) => {
     const { numero } = req.params;

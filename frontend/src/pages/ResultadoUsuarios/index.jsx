@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Button, Heading } from "../../components";
 import Header from "../../components/Header";
 import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ResultadoUsuariosPage() {
     const [usuarios, setUsuarios] = useState([]);
@@ -49,10 +49,10 @@ export default function ResultadoUsuariosPage() {
                             usuarios.map(usuario => (
                                 <div key={usuario.cpf} className="p-4 bg-white shadow rounded mb-4 w-full">
                                     <div className="flex flex-col items-start">
-                                        <p><strong>Nome do Usuário:</strong> {usuario.nome_de_usuario}</p>
+                                        <p><strong>Nome Completo:</strong> {usuario.nome}</p>
+                                        <p><strong>Nome de Usuário:</strong> {usuario.nome_de_usuario}</p>
                                         <p><strong>CPF:</strong> {usuario.cpf}</p>
                                         <p><strong>Cargo:</strong> {usuario.cargo}</p>
-                                        <p><strong>Email:</strong> {usuario.email}</p>
                                     </div>
                                     <Link to={`/editarusuario/${usuario.cpf}`} className="mt-4">
                                         <Button shape="round" className="font-semibold sm:px-5">

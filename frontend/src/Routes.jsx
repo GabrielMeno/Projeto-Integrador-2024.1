@@ -1,7 +1,5 @@
 import React from 'react';
 import { useRoutes, useNavigate } from 'react-router-dom';
-import Home from 'pages/Home';
-import NotFound from 'pages/NotFound';
 import PainelPrincipal from 'pages/PainelPrincipal';
 import Ordens from 'pages/Ordens';
 import Cadastro from 'pages/Cadastro';
@@ -25,7 +23,6 @@ const ProjectRoutes = () => {
 
   let element = useRoutes([
     { path: '/', element: <Login onLogin={handleLoginSuccess} /> },
-    { path: '*', element: <NotFound /> },
     { path: '/login', element: <Login onLogin={handleLoginSuccess} /> },
     { 
       path: '/', 
@@ -36,7 +33,7 @@ const ProjectRoutes = () => {
         { path: '/cadastro', element: <Cadastro /> },
         { path: '/editarordem/:numero', element: <EditarOrdem /> },
         { path: '/painelusuarios', element: <PainelUsuarios /> },
-        { path: '/editarusuario/:cpf', element: <EditarUsuario /> },  // Aqui foi feita a mudança
+        { path: '/editarusuario/:cpf', element: <EditarUsuario /> }, 
         { path: '/cadastrarusuario', element: <CadastrarUsuario /> },
         { path: '/resultado-usuarios', element: <ResultadoUsuarios /> }, 
         { path: '/resultado-ordens', element: <ResultadoOrdens /> },

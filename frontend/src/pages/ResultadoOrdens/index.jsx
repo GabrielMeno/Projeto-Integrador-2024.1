@@ -5,6 +5,7 @@ import { Button, Heading } from "../../components";
 import Header from "../../components/Header";
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { format } from 'date-fns'; 
 
 export default function ResultadoOrdensPage() {
     const [ordens, setOrdens] = useState([]);
@@ -77,8 +78,8 @@ export default function ResultadoOrdensPage() {
                                         <p><strong>Cliente:</strong> {ordem.cliente_nome}</p>
                                         <p><strong>Número da Ordem:</strong> {ordem.numero}</p>
                                         <p><strong>Status:</strong> {ordem.status}</p>
-                                        <p><strong>Data:</strong> {ordem.data}</p>
-                                        <p><strong>Data de Entrega:</strong> {ordem.data_de_entrega}</p>
+                                        <p><strong>Data:</strong> {format(new Date(ordem.data), 'dd/MM/yyyy')}</p>
+                                        <p><strong>Data de Entrega:</strong> {format(new Date(ordem.data_de_entrega), 'dd/MM/yyyy')}</p>
                                         <p><strong>Descrição:</strong> {ordem.descricao_do_servico}</p>
                                     </div>
                                     <div className="flex mt-4">

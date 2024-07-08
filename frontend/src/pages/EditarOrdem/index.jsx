@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { Button, Input, Heading, SelectBox, TextArea, Img, Text } from "../../components";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { format } from 'date-fns'; // Importar a biblioteca de formatação de datas
 
 const dropDownOptions = [
     { label: "Em aberto", value: "Em aberto" },
@@ -30,8 +31,11 @@ export default function EditarOrdemPage() {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                setOrdem(response.data);
-                setStatus(response.data.status);
+                const ordemData = response.data;
+                ordemData.data = format(new Date(ordemData.data), 'yyyy-MM-dd');
+                ordemData.data_de_entrega = format(new Date(ordemData.data_de_entrega), 'yyyy-MM-dd');
+                setOrdem(ordemData);
+                setStatus(ordemData.status);
             } catch (error) {
                 console.error('Erro ao buscar ordem:', error);
             }
@@ -41,14 +45,24 @@ export default function EditarOrdemPage() {
     }, [numero]);
 
     const handleStatusChange = (selectedOption) => {
-        console.log("Selected status:", selectedOption); // Log para depuração
         setStatus(selectedOption ? selectedOption.value : '');
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setOrdem(prevOrdem => ({ ...prevOrdem, [name]: value }));
     };
 
     const handleSubmit = async () => {
         const token = localStorage.getItem('token');
+        const { data_de_entrega, descricao_do_servico, pecas } = ordem;
         try {
-            await axios.put(`http://localhost:3010/ordem/${numero}`, { status }, {
+            await axios.put(`http://localhost:3010/ordem/${numero}`, { 
+                status,
+                data_de_entrega,
+                descricao_do_servico,
+                pecas
+            }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -69,7 +83,7 @@ export default function EditarOrdemPage() {
                 <title>TopDuo</title>
                 <meta name="description" content="Web site created using create-react-app" />
             </Helmet>
-            <div className="flex w-full flex-col items-start gap-[97px] bg-gray-300 py-11 md:gap-[72px] md:py-5 sm:gap-12">
+            <div className="flex w-full flex-col items-start gap-[30px] bg-gray-300 py-5 md:gap-[20px] sm:gap-10"> {/* Ajuste o gap e padding */}
                 <div className="container-xs md:p-5">
                     <header className="flex items-center justify-between gap-5 md:flex-col">
                         <div className="relative h-[64px] w-[10%] self-end rounded-[5px] bg-indigo-700 md:h-auto md:w-full md:self-auto">
@@ -102,8 +116,8 @@ export default function EditarOrdemPage() {
                     </header>
                 </div>
                 <div className="w-[100%] md:w-full md:p-5">
-                    <div className="mb-[22px] ml-[62px] mr-[66px] mt-24 md:mx-0">
-                        <div className="flex flex-col items-center gap-[38px]">
+                    <div className="mb-[22px] ml-[62px] mr-[66px] mt-8 md:mx-0"> {/* Ajuste a margem superior */}
+                        <div className="flex flex-col items-center gap-[20px]"> {/* Ajuste o gap */}
                             <div className="self-stretch">
                                 <div className="flex items-start gap-9 md:flex-col">
                                     <div className="w-[36%] md:w-full">
@@ -163,9 +177,10 @@ export default function EditarOrdemPage() {
                                                         <Input
                                                             size="xs"
                                                             shape="round"
-                                                            name="dataDeEntrega"
+                                                            name="data_de_entrega"
+                                                            type="date"
                                                             value={ordem.data_de_entrega || ''}
-                                                            readOnly
+                                                            onChange={handleChange}
                                                             className="w-[40%] font-light"
                                                         />
                                                     </div>
@@ -190,25 +205,25 @@ export default function EditarOrdemPage() {
                                                 <Heading as="p" className="relative z-[4]">
                                                     Reclamações e necessidades
                                                 </Heading>
-                                                <TextArea shape="round" name="reclamacoes" value={ordem.reclamacoes_e_necessidades || ''} readOnly className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="reclamacoes_e_necessidades" value={ordem.reclamacoes_e_necessidades || ''} readOnly className="self-stretch !border-indigo-700" />
                                             </div>
                                             <div className="flex w-full flex-col items-center">
                                                 <Heading as="p" className="relative z-[5]">
                                                     Peças do serviço
                                                 </Heading>
-                                                <TextArea shape="round" name="pecas" value={ordem.pecas || ''} readOnly className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="pecas" value={ordem.pecas || ''} onChange={handleChange} className="self-stretch !border-indigo-700" />
                                             </div>
                                         </div>
                                         <div className="mt-2.5 flex items-center gap-[22px] self-stretch md:flex-col">
                                             <div className="flex w-full flex-col items-center self-end md:self-auto">
                                                 <Heading as="p">Descrição do serviço</Heading>
-                                                <TextArea shape="round" name="descricao" value={ordem.descricao_do_servico || ''} readOnly className="self-stretch !border-indigo-700" />
+                                                <TextArea shape="round" name="descricao_do_servico" value={ordem.descricao_do_servico || ''} onChange={handleChange} className="self-stretch !border-indigo-700" />
                                             </div>
                                             <div className="flex w-full flex-col items-center">
                                                 <Heading as="p" className="relative z-[6]">
                                                     Funcionário responsável
                                                 </Heading>
-                                                <Input shape="round" name="funcionario" value={ordem.funcionario_responsavel || ''} readOnly className="self-stretch sm:pr-5" />
+                                                <Input shape="round" name="funcionario_responsavel" value={ordem.funcionario_nome || ''} readOnly className="self-stretch sm:pr-5" />
                                                 <Heading as="p" className="relative z-[7] mt-1">
                                                     Valor do serviço
                                                 </Heading>

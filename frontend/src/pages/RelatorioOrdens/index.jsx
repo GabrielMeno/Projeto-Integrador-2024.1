@@ -3,6 +3,8 @@ import { Helmet } from 'react-helmet';
 import { Button, Input, SelectBox, Heading } from '../../components';
 import Header from "../../components/Header";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns'; 
 
 const dropDownOptions = [
     { label: "Em aberto", value: "Em aberto" },
@@ -15,6 +17,33 @@ const dropDownOptions = [
     { label: "Em garantia", value: "Em garantia" },
 ];
 
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    border: '2px solid #4B0082',
+    borderRadius: '16px',
+    padding: '2px',
+    minHeight: '32px',
+    fontSize: '14px',
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: state.isSelected ? 'white' : '#4B0082',
+    backgroundColor: state.isSelected ? '#4B0082' : 'white',
+    fontSize: '14px',
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: '#4B0082',
+    fontSize: '14px',
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#4B0082',
+    fontSize: '14px',
+  }),
+};
+
 export default function RelatorioOrdensPage() {
     const [formData, setFormData] = useState({
         dataInicio: '',
@@ -22,14 +51,15 @@ export default function RelatorioOrdensPage() {
         status: ''
     });
     const [ordens, setOrdens] = useState([]);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-    const handleSelectChange = (e) => {
-        setFormData(prevState => ({ ...prevState, status: e.target.value }));
+    const handleSelectChange = (selectedOption) => {
+        setFormData(prevState => ({ ...prevState, status: selectedOption ? selectedOption.value : '' }));
     };
 
     const handleSubmit = async () => {
@@ -63,11 +93,11 @@ export default function RelatorioOrdensPage() {
             <div className="flex w-full flex-col items-start bg-gray-300 py-11 md:py-5">
                 <div className="container-xs mb-1 flex flex-col items-center gap-20 md:gap-[60px] md:p-5 sm:gap-10">
                     <Header title="Relatório de Ordens de Serviço" />
-                    <Heading size="textlg" as="h2" className="mt-12 uppercase">
-                        Relatório de Ordens de Serviço
-                    </Heading>
-                    <div className="mt-8 flex flex-col items-center self-stretch">
-                        <div className="flex flex-col items-center self-stretch">
+                    <div className="flex w-[28%] flex-col items-center md:w-full">  {/* Adicionando a largura consistente */}
+                        <Heading size="textlg" as="h2" className="mt-12 uppercase">
+                            Relatório
+                        </Heading>
+                        <div className="mt-8 flex flex-col items-center self-stretch">
                             <Heading as="h3">Data de Início</Heading>
                             <Input
                                 type="date"
@@ -93,19 +123,15 @@ export default function RelatorioOrdensPage() {
                             <Heading as="h5" className="relative z-[1]">
                                 Status
                             </Heading>
-                            <select
+                            <SelectBox
+                                shape="round"
                                 name="status"
+                                options={dropDownOptions}
                                 value={formData.status}
+                                className="self-stretch"
                                 onChange={handleSelectChange}
-                                className="self-stretch p-2 border rounded"
-                            >
-                                <option value="">Selecione o status</option>
-                                {dropDownOptions.map(option => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
+                                styles={customStyles}  
+                            />
                         </div>
                         <Button shape="round" className="mt-[82px] min-w-[156px] font-semibold sm:px-5" onClick={handleSubmit}>
                             Gerar Relatório
@@ -121,8 +147,8 @@ export default function RelatorioOrdensPage() {
                                     <div key={ordem.numero} className="p-4 bg-white shadow rounded mb-4">
                                         <p><strong>Cliente:</strong> {ordem.cliente_nome}</p>
                                         <p><strong>Número da Ordem:</strong> {ordem.numero}</p>
-                                        <p><strong>Data:</strong> {ordem.data}</p>
-                                        <p><strong>Data de Entrega:</strong> {ordem.data_de_entrega}</p>
+                                        <p><strong>Data:</strong> {format(new Date(ordem.data), 'dd/MM/yyyy')}</p>
+                                        <p><strong>Data de Entrega:</strong> {format(new Date(ordem.data_de_entrega), 'dd/MM/yyyy')}</p>
                                         <p><strong>Descrição:</strong> {ordem.descricao_do_servico}</p>
                                     </div>
                                 ))}
