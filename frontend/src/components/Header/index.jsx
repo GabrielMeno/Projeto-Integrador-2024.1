@@ -13,14 +13,13 @@ export default function Header({ title, showBackButton = true }) {
         const token = localStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
-            console.log("Decoded Token:", decodedToken); // Log para depuração
-            setUserType(decodedToken.tipo); // Supondo que o tipo de usuário está no campo "tipo"
+            setUserType(decodedToken.tipo);
         }
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); // Remove o token de autenticação
-        navigate("/login"); // Redireciona para a página de login
+        localStorage.removeItem('token');
+        navigate("/login"); 
     };
 
     return (

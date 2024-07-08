@@ -17,7 +17,7 @@ export default function ResultadoOrdensPage() {
             const token = localStorage.getItem('token');
             if (token) {
                 const decodedToken = jwtDecode(token);
-                setIsAdmin(decodedToken.tipo === 1); // Supondo que tipo 1 é administrador
+                setIsAdmin(decodedToken.tipo === 1); 
             }
 
             try {

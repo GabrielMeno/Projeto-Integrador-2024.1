@@ -12,8 +12,7 @@ export default function PainelPrincipalPage() {
         const token = localStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
-            console.log("Decoded Token:", decodedToken); // Log para depuração
-            setUserType(decodedToken.tipo); // Supondo que o tipo de usuário está no campo "tipo"
+            setUserType(decodedToken.tipo); 
         }
     }, []);
 

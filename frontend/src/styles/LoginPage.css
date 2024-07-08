@@ -5,7 +5,7 @@
     justify-content: center;
     height: 100vh;
     background-color: #e6eaf8;
-    padding-top: 70px; /* Ajuste o valor de acordo com a altura do cabeçalho */
+    padding-top: 70px; 
   }
   
   .header {
@@ -20,7 +20,7 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    height: 70px; /* Defina uma altura fixa */
+    height: 70px; 
     display: flex;
     align-items: center;
   }
@@ -31,7 +31,7 @@
     justify-content: center;
     width: 100%;
     max-width: 900px;
-    margin-top: 50px; /* Ajuste a margem superior se necessário */
+    margin-top: 50px;
   }
   
   .login-form {

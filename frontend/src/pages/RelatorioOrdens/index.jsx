@@ -93,7 +93,7 @@ export default function RelatorioOrdensPage() {
             <div className="flex w-full flex-col items-start bg-gray-300 py-11 md:py-5">
                 <div className="container-xs mb-1 flex flex-col items-center gap-20 md:gap-[60px] md:p-5 sm:gap-10">
                     <Header title="Relatório de Ordens de Serviço" />
-                    <div className="flex w-[28%] flex-col items-center md:w-full">  {/* Adicionando a largura consistente */}
+                    <div className="flex w-[28%] flex-col items-center md:w-full">  {}
                         <Heading size="textlg" as="h2" className="mt-12 uppercase">
                             Relatório
                         </Heading>

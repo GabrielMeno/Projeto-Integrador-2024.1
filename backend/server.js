@@ -169,7 +169,6 @@ app.post("/cliente", requireJWTAuth, async (req, res) => {
     try {
         const clienteNome = req.body.nome;
         const clienteEmail = req.body.email;
-        console.log(`Nome: ${clienteNome} - Email: ${clienteEmail}`);
         db.none("INSERT INTO Cliente (nome, email) VALUES ($1, $2);", [
             clienteNome,
             clienteEmail,
@@ -236,12 +235,8 @@ app.get("/consultarUsuarios", requireJWTAuth, async (req, res) => {
         queryParams.push(`%${cargo}%`);
     }
 
-    console.log('Query:', query);
-    console.log('Query Params:', queryParams);
-
     try {
         const usuarios = await db.any(query, queryParams);
-        console.log('Usuários encontrados:', usuarios);
         res.status(200).json(usuarios);
     } catch (error) {
         console.error('Erro ao executar a consulta:', error);
@@ -265,7 +260,6 @@ app.put("/usuario", requireJWTAuth, async (req, res) => {
     const { cpf } = req.query;
     const { nome, nome_de_usuario, cargo, rg, senha, permissoes } = req.body;
 
-    console.log("Dados recebidos para atualizar usuário:", req.body);
 
     try {
         const fields = [
@@ -291,9 +285,6 @@ app.put("/usuario", requireJWTAuth, async (req, res) => {
             .map(({ value }) => value);
 
         values.push(cpf);
-
-        console.log("Consulta de atualização:", `UPDATE Usuario SET ${setClause} WHERE cpf = $${values.length}`);
-        console.log("Valores de atualização:", values);
 
         await db.none(
             `UPDATE Usuario SET ${setClause} WHERE cpf = $${values.length}`,
@@ -335,15 +326,12 @@ app.post("/novaOrdem", requireJWTAuth, async (req, res) => {
         valor
     } = req.body;
 
-    console.log('Dados recebidos no servidor:', req.body);
-
+  
     try {
-        // Validação dos dados recebidos
         if (!nome || !email || !telefone || !cpfCnpj || !data || !dataDeEntrega || !funcionario || !valor) {
             throw new Error('Campos obrigatórios estão faltando');
         }
 
-        // Verificar se o cliente já existe
         let cliente = await db.oneOrNone("SELECT cpf_cnpj FROM Cliente WHERE cpf_cnpj = $1;", [cpfCnpj]);
 
         if (!cliente) {

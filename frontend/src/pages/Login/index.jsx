@@ -23,8 +23,8 @@ const LoginPage = ({ onLogin }) => {
   
       if (response.status >= 200 && response.status < 300) {
         localStorage.setItem('token', response.data.token);
-        onLogin(); // Chama a função fornecida por props para sinalizar o login bem-sucedido
-        navigate('/painelprincipal'); // Redireciona para a página principal após o login
+        onLogin(); 
+        navigate('/painelprincipal'); 
       } else {
         console.error('Falha na autenticação');
         setError('Falha na autenticação');
@@ -35,11 +35,6 @@ const LoginPage = ({ onLogin }) => {
     }
   };
 
-  const cancelLogin = () => {
-    setUsername('');
-    setPassword('');
-    setError('');
-  };
 
   return (
     <>

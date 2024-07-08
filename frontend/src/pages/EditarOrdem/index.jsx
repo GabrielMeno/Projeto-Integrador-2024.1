@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Button, Input, Heading, SelectBox, TextArea, Img, Text } from "../../components";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { format } from 'date-fns'; // Importar a biblioteca de formatação de datas
+import { format } from 'date-fns'; 
 
 const dropDownOptions = [
     { label: "Em aberto", value: "Em aberto" },
@@ -83,7 +83,7 @@ export default function EditarOrdemPage() {
                 <title>TopDuo</title>
                 <meta name="description" content="Web site created using create-react-app" />
             </Helmet>
-            <div className="flex w-full flex-col items-start gap-[30px] bg-gray-300 py-5 md:gap-[20px] sm:gap-10"> {/* Ajuste o gap e padding */}
+            <div className="flex w-full flex-col items-start gap-[30px] bg-gray-300 py-5 md:gap-[20px] sm:gap-10"> {}
                 <div className="container-xs md:p-5">
                     <header className="flex items-center justify-between gap-5 md:flex-col">
                         <div className="relative h-[64px] w-[10%] self-end rounded-[5px] bg-indigo-700 md:h-auto md:w-full md:self-auto">
@@ -116,8 +116,8 @@ export default function EditarOrdemPage() {
                     </header>
                 </div>
                 <div className="w-[100%] md:w-full md:p-5">
-                    <div className="mb-[22px] ml-[62px] mr-[66px] mt-8 md:mx-0"> {/* Ajuste a margem superior */}
-                        <div className="flex flex-col items-center gap-[20px]"> {/* Ajuste o gap */}
+                    <div className="mb-[22px] ml-[62px] mr-[66px] mt-8 md:mx-0"> {}
+                        <div className="flex flex-col items-center gap-[20px]"> {}
                             <div className="self-stretch">
                                 <div className="flex items-start gap-9 md:flex-col">
                                     <div className="w-[36%] md:w-full">
