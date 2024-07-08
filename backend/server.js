@@ -165,20 +165,6 @@ app.get("/cliente", requireJWTAuth, async (req, res) => {
     }
 });
 
-app.post("/cliente", requireJWTAuth, async (req, res) => {
-    try {
-        const clienteNome = req.body.nome;
-        const clienteEmail = req.body.email;
-        db.none("INSERT INTO Cliente (nome, email) VALUES ($1, $2);", [
-            clienteNome,
-            clienteEmail,
-        ]);
-        res.sendStatus(200);
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(400);
-    }
-});
 
 app.put("/cliente", requireJWTAuth, async (req, res) => {
     const { cpf } = req.query;
